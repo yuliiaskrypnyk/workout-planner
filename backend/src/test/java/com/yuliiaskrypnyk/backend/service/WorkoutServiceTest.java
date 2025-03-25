@@ -1,6 +1,9 @@
 package com.yuliiaskrypnyk.backend.service;
 
+import com.yuliiaskrypnyk.backend.dto.ExerciseDataDTO;
+import com.yuliiaskrypnyk.backend.dto.WorkoutDTO;
 import com.yuliiaskrypnyk.backend.model.Exercise;
+import com.yuliiaskrypnyk.backend.model.ExerciseData;
 import com.yuliiaskrypnyk.backend.model.Workout;
 import com.yuliiaskrypnyk.backend.repository.ExerciseRepository;
 import com.yuliiaskrypnyk.backend.repository.WorkoutRepository;
@@ -12,9 +15,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -43,13 +49,10 @@ class WorkoutServiceTest {
     // GET all workouts
     @Test
     void findAllWorkouts_shouldReturnListOfWorkouts_whenRepositoryHasData() {
-        // GIVEN
         when(mockWorkoutRepository.findAll()).thenReturn(workouts);
 
-        // WHEN
         List<Workout> actual = workoutService.findAllWorkouts();
 
-        // THEN
         assertNotNull(actual, "The list of workouts should not be null");
         assertEquals(workouts, actual, "The returned list should match the expected list");
         verify(mockWorkoutRepository, times(1)).findAll();
@@ -57,17 +60,70 @@ class WorkoutServiceTest {
 
     @Test
     void findAllWorkouts_shouldReturnEmptyList_whenRepositoryIsEmpty() {
-        // GIVEN
         List<Workout> emptyWorkouts = Collections.emptyList();
         when(mockWorkoutRepository.findAll()).thenReturn(emptyWorkouts);
 
-        // WHEN
         List<Workout> actual = workoutService.findAllWorkouts();
 
-        // THEN
         assertNotNull(actual, "The list of workouts should not be null");
         assertTrue(actual.isEmpty(), "The list should be empty");
         verify(mockWorkoutRepository, times(1)).findAll();
+    }
+
+    // GET workout by id
+    @Test
+    void findWorkoutById_shouldReturnWorkout_whenWorkoutExists() {
+        String workoutId = "1";
+        Workout expectedWorkout = workouts.get(0);
+        when(mockWorkoutRepository.findById(workoutId)).thenReturn(Optional.of(expectedWorkout));
+
+        Workout actualWorkout = workoutService.findWorkoutById(workoutId);
+
+        assertNotNull(actualWorkout, "The workout should not be null");
+        assertEquals(expectedWorkout, actualWorkout, "The returned workout should match the expected workout");
+        verify(mockWorkoutRepository, times(1)).findById(workoutId);
+    }
+
+    @Test
+    void findWorkoutById_shouldThrowNoSuchElementException_whenWorkoutDoesNotExist() {
+        String workoutId = "3";
+        when(mockWorkoutRepository.findById(workoutId)).thenReturn(Optional.empty());
+
+        NoSuchElementException exception = assertThrows(NoSuchElementException.class, () ->
+            workoutService.findWorkoutById(workoutId)
+        );
+
+        assertEquals("Workout with ID " + workoutId + " not found.", exception.getMessage());
+        verify(mockWorkoutRepository, times(1)).findById(workoutId);
+    }
+
+    // Create workout
+    @Test
+    void createWorkout_shouldReturnSavedWorkout_whenWorkoutDTOIsValid() {
+        WorkoutDTO workoutDTO = WorkoutDTO.builder()
+                .name("Leg workout")
+                .exercises(List.of(
+                        ExerciseDataDTO.builder().exerciseId("1").sets(3).reps(10).weight(50).build(),
+                        ExerciseDataDTO.builder().exerciseId("2").sets(4).reps(12).weight(60).build()
+                ))
+                .build();
+
+        Workout expectedWorkout = Workout.builder()
+                .name("Leg workout")
+                .exercises(List.of(
+                        ExerciseData.builder().exerciseId("1").sets(3).reps(10).weight(50).build(),
+                        ExerciseData.builder().exerciseId("2").sets(4).reps(12).weight(60).build()
+                ))
+                .build();
+
+        when(mockWorkoutRepository.save(any(Workout.class))).thenReturn(expectedWorkout);
+
+        Workout actualWorkout = workoutService.createWorkout(workoutDTO);
+
+        assertNotNull(actualWorkout, "The created workout should not be null");
+        assertEquals(expectedWorkout.name(), actualWorkout.name(), "Workout name should match");
+        assertEquals(expectedWorkout.exercises(), actualWorkout.exercises(), "Workout exercises should match");
+        verify(mockWorkoutRepository, times(1)).save(any(Workout.class));
     }
 
     // GET all exercises
@@ -84,16 +140,40 @@ class WorkoutServiceTest {
 
     @Test
     void findAllExercises_shouldReturnEmptyList_whenRepositoryIsEmpty() {
-        // GIVEN
         List<Exercise> emptyExercises = Collections.emptyList();
         when(mockExerciseRepository.findAll()).thenReturn(emptyExercises);
 
-        // WHEN
         List<Exercise> actual = workoutService.findAllExercises();
 
-        // THEN
         assertNotNull(actual, "The list of exercises should not be null");
         assertTrue(actual.isEmpty(), "The list should be empty");
         verify(mockExerciseRepository, times(1)).findAll();
+    }
+
+    // GET exercise by id
+    @Test
+    void findExerciseById_shouldReturnExercise_whenExerciseExists() {
+        String exerciseId = "1";
+        Exercise expectedExercise = exercises.get(0);
+        when(mockExerciseRepository.findById(exerciseId)).thenReturn(Optional.of(expectedExercise));
+
+        Exercise actualExercise = workoutService.findExerciseById(exerciseId);
+
+        assertNotNull(actualExercise, "The exercise should not be null");
+        assertEquals(expectedExercise, actualExercise, "The returned exercise should match the expected exercise");
+        verify(mockExerciseRepository, times(1)).findById(exerciseId);
+    }
+
+    @Test
+    void findExerciseById_shouldThrowNoSuchElementException_whenExerciseDoesNotExist() {
+        String exerciseId = "3";
+        when(mockExerciseRepository.findById(exerciseId)).thenReturn(Optional.empty());
+
+        NoSuchElementException exception = assertThrows(NoSuchElementException.class, () ->
+            workoutService.findExerciseById(exerciseId)
+        );
+
+        assertEquals("Exercise with ID " + exerciseId + " not found.", exception.getMessage());
+        verify(mockExerciseRepository, times(1)).findById(exerciseId);
     }
 }
