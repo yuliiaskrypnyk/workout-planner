@@ -1,7 +1,11 @@
 package com.yuliiaskrypnyk.backend.dto;
 
+import lombok.Builder;
+
+@Builder
 public record ExerciseDataDTO(
-        String name,
+        String exerciseId,
+        //String name,
         int sets,
         int reps,
         double weight) {
