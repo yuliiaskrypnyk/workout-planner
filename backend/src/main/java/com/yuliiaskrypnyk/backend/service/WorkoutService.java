@@ -56,4 +56,30 @@ public class WorkoutService {
 
         return workoutRepository.save(workout);
     }
+
+    public Workout updateWorkout(String id, WorkoutDTO updatedWorkoutDTO) {
+        Workout existingWorkout = workoutRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Workout with ID " + id + " not found."));
+
+        List<ExerciseData> updatedExerciseData = updatedWorkoutDTO.exercises().stream()
+                .map(updatedDto -> ExerciseData.builder()
+                        .exerciseId(updatedDto.exerciseId())
+                        .sets(updatedDto.sets())
+                        .reps(updatedDto.reps())
+                        .weight(updatedDto.weight())
+                        .build())
+                .toList();
+
+        String updatedName = (updatedWorkoutDTO.name() != null && !updatedWorkoutDTO.name().isBlank())
+                ? updatedWorkoutDTO.name()
+                : existingWorkout.name();
+
+        Workout updatedWorkout = Workout.builder()
+                .id(existingWorkout.id())
+                .name(updatedName)
+                .exercises(updatedExerciseData)
+                .build();
+
+        return workoutRepository.save(updatedWorkout);
+    }
 }

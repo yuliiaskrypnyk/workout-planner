@@ -90,7 +90,7 @@ class WorkoutServiceTest {
         when(mockWorkoutRepository.findById(workoutId)).thenReturn(Optional.empty());
 
         NoSuchElementException exception = assertThrows(NoSuchElementException.class, () ->
-            workoutService.findWorkoutById(workoutId)
+                workoutService.findWorkoutById(workoutId)
         );
 
         assertEquals("Workout with ID " + workoutId + " not found.", exception.getMessage());
@@ -124,6 +124,40 @@ class WorkoutServiceTest {
         assertEquals(expectedWorkout.name(), actualWorkout.name(), "Workout name should match");
         assertEquals(expectedWorkout.exercises(), actualWorkout.exercises(), "Workout exercises should match");
         verify(mockWorkoutRepository, times(1)).save(any(Workout.class));
+    }
+
+    // Update workout
+    @Test
+    void updateWorkout_shouldUpdateAndReturnWorkout_whenWorkoutExists() {
+        String workoutId = "1";
+        Workout existingWorkout = Workout.builder().id(workoutId).name("Old Workout").build();
+        WorkoutDTO updatedWorkoutDTO = WorkoutDTO.builder().name("Updated Workout").exercises(Collections.emptyList()).build();
+        Workout updatedWorkout = Workout.builder().id(workoutId).name("Updated Workout").exercises(Collections.emptyList()).build();
+
+        when(mockWorkoutRepository.findById(workoutId)).thenReturn(Optional.of(existingWorkout));
+        when(mockWorkoutRepository.save(any(Workout.class))).thenReturn(updatedWorkout);
+
+        Workout result = workoutService.updateWorkout(workoutId, updatedWorkoutDTO);
+
+        assertNotNull(result);
+        assertEquals(updatedWorkoutDTO.name(), result.name());
+        verify(mockWorkoutRepository, times(1)).findById(workoutId);
+        verify(mockWorkoutRepository, times(1)).save(any(Workout.class));
+    }
+
+    @Test
+    void updateWorkout_shouldThrowNoSuchElementException_whenWorkoutDoesNotExist() {
+        String workoutId = "3";
+        WorkoutDTO updatedWorkoutDTO = WorkoutDTO.builder().name("Updated Workout").exercises(Collections.emptyList()).build();
+
+        when(mockWorkoutRepository.findById(workoutId)).thenReturn(Optional.empty());
+
+        NoSuchElementException exception = assertThrows(NoSuchElementException.class, () ->
+                workoutService.updateWorkout(workoutId, updatedWorkoutDTO)
+        );
+
+        assertEquals("Workout with ID " + workoutId + " not found.", exception.getMessage());
+        verify(mockWorkoutRepository, times(1)).findById(workoutId);
     }
 
     // GET all exercises
@@ -170,7 +204,7 @@ class WorkoutServiceTest {
         when(mockExerciseRepository.findById(exerciseId)).thenReturn(Optional.empty());
 
         NoSuchElementException exception = assertThrows(NoSuchElementException.class, () ->
-            workoutService.findExerciseById(exerciseId)
+                workoutService.findExerciseById(exerciseId)
         );
 
         assertEquals("Exercise with ID " + exerciseId + " not found.", exception.getMessage());

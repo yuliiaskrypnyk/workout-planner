@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,6 +42,12 @@ public class WorkoutController {
     public ResponseEntity<Workout> addWorkout(@RequestBody WorkoutDTO workoutDTO) {
         Workout createdWorkout = workoutService.createWorkout(workoutDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdWorkout);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Workout> updateWorkout(@PathVariable String id, @RequestBody WorkoutDTO workoutDTO) {
+        Workout updatedWorkout = workoutService.updateWorkout(id, workoutDTO);
+        return ResponseEntity.ok(updatedWorkout);
     }
 
     // Exercise

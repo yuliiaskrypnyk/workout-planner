@@ -34,6 +34,16 @@ export const createWorkout = async (newWorkout: Workout) => {
     }
 };
 
+export const editWorkout = async (id: string, editedWorkout: Workout) => {
+    try {
+        const response = await axios.put(`${WORKOUTS_URL}/${id}`, editedWorkout)
+        return response.data;
+    } catch (error) {
+        console.error("Error updating workout:", error);
+        throw error;
+    }
+};
+
 export const getExercises = async () => {
     try {
         const response = await axios.get(EXERCISES_URL)

@@ -19,6 +19,7 @@ import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -44,6 +45,7 @@ class WorkoutControllerTest {
 
     private List<Workout> workouts;
     private List<Exercise> exercises;
+    private List<ExerciseDataDTO> exerciseDataList;
 
     @BeforeEach
     void setUp() {
@@ -52,6 +54,11 @@ class WorkoutControllerTest {
 
         saveMockWorkoutList();
         saveMockExerciseList();
+
+        exerciseDataList = List.of(
+                ExerciseDataDTO.builder().exerciseId("1").sets(3).reps(10).weight(50).build(),
+                ExerciseDataDTO.builder().exerciseId("2").sets(4).reps(12).weight(60).build()
+        );
     }
 
     private void saveMockWorkoutList() {
@@ -114,10 +121,7 @@ class WorkoutControllerTest {
     void addWorkout_shouldReturnCreatedWorkout_whenRequestIsValid() throws Exception {
         WorkoutDTO workoutDTO = WorkoutDTO.builder()
                 .name("Leg workout")
-                .exercises(List.of(
-                        ExerciseDataDTO.builder().exerciseId("1").sets(3).reps(10).weight(50).build(),
-                        ExerciseDataDTO.builder().exerciseId("2").sets(4).reps(12).weight(60).build()
-                ))
+                .exercises(exerciseDataList)
                 .build();
 
         mockMvc.perform(post(WORKOUTS_URL)
@@ -133,6 +137,44 @@ class WorkoutControllerTest {
                 .andExpect(jsonPath("$.exercises[1].sets").value(4))
                 .andExpect(jsonPath("$.exercises[1].reps").value(12))
                 .andExpect(jsonPath("$.exercises[1].weight").value(60));
+    }
+
+    // Update workout
+    @Test
+    void updateWorkout_shouldReturnUpdatedWorkout_whenRequestIsValid() throws Exception {
+        String workoutId = "1";
+
+        WorkoutDTO updatedWorkoutDTO = WorkoutDTO.builder()
+                .name("Updated Leg Workout")
+                .exercises(exerciseDataList)
+                .build();
+
+        mockMvc.perform(put(WORKOUTS_URL + "/{id}", workoutId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updatedWorkoutDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Updated Leg Workout"))
+                .andExpect(jsonPath("$.exercises[0].exerciseId").value("1"))
+                .andExpect(jsonPath("$.exercises[0].sets").value(3))
+                .andExpect(jsonPath("$.exercises[0].reps").value(10))
+                .andExpect(jsonPath("$.exercises[0].weight").value(50))
+                .andExpect(jsonPath("$.exercises[1].exerciseId").value("2"))
+                .andExpect(jsonPath("$.exercises[1].sets").value(4))
+                .andExpect(jsonPath("$.exercises[1].reps").value(12))
+                .andExpect(jsonPath("$.exercises[1].weight").value(60));
+    }
+
+    @Test
+    void updateWorkout_shouldReturnNotFound_whenWorkoutDoesNotExist() throws Exception {
+        String nonExistentWorkoutId = "000";
+
+        WorkoutDTO workoutDTO = WorkoutDTO.builder().name("Non-existent Workout").build();
+
+        mockMvc.perform(put(WORKOUTS_URL + "/{id}", nonExistentWorkoutId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(workoutDTO)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("The page is not available. Please try again later."));
     }
 
     // GET all exercises
