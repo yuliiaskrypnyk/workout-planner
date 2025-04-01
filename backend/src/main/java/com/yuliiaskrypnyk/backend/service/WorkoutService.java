@@ -1,6 +1,7 @@
 package com.yuliiaskrypnyk.backend.service;
 
 import com.yuliiaskrypnyk.backend.dto.WorkoutDTO;
+import com.yuliiaskrypnyk.backend.exception.ResourceNotFoundException;
 import com.yuliiaskrypnyk.backend.model.Exercise;
 import com.yuliiaskrypnyk.backend.model.ExerciseData;
 import com.yuliiaskrypnyk.backend.model.Workout;
@@ -9,7 +10,6 @@ import com.yuliiaskrypnyk.backend.repository.WorkoutRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class WorkoutService {
@@ -31,12 +31,12 @@ public class WorkoutService {
 
     public Workout findWorkoutById(String id) {
         return workoutRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Workout with ID " + id + " not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Workout"));
     }
 
     public Exercise findExerciseById(String id) {
         return exerciseRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Exercise with ID " + id + " not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Exercise"));
     }
 
     public Workout createWorkout(WorkoutDTO workoutDTO) {
@@ -59,7 +59,7 @@ public class WorkoutService {
 
     public Workout updateWorkout(String id, WorkoutDTO updatedWorkoutDTO) {
         Workout existingWorkout = workoutRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Workout with ID " + id + " not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Workout"));
 
         List<ExerciseData> updatedExerciseData = updatedWorkoutDTO.exercises().stream()
                 .map(updatedDto -> ExerciseData.builder()

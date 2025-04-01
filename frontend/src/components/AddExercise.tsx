@@ -12,7 +12,7 @@ type AddExerciseProps = {
 
 type ExerciseField = "sets" | "reps" | "weight";
 
-function AddExercise({selectedExercises, setSelectedExercises, existingExercises}: AddExerciseProps) {
+function AddExercise({selectedExercises, setSelectedExercises, existingExercises}: Readonly<AddExerciseProps>) {
     const [exercises, setExercises] = useState<Exercise[]>([]);
 
     useEffect(() => {

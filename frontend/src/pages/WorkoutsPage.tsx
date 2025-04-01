@@ -17,7 +17,7 @@ function WorkoutsPage() {
         <Box>
             <Typography variant="h5" sx={{margin: 2}}>Workout List</Typography>
 
-            <Grid container spacing={2} justifyContent="flex-start">
+            <Grid container spacing={2} justifyContent="flex-start" sx={{marginBottom: 3}}>
                 <Grid component="div">
                     <Link to={`/workouts/new`}>
                         <Button variant="contained" color="primary">
@@ -29,7 +29,20 @@ function WorkoutsPage() {
 
             <List>
                 {workouts.map(workout => (
-                    <ListItem key={workout.id} component="li" sx={{'&:hover': {textDecoration: 'underline'}}}>
+                    <ListItem key={workout.id} component="li"
+                              sx={{
+                                  '&:hover': {
+                                      backgroundColor: '#e1f5fe',
+                                      borderRadius: 1,
+                                      transition: 'all 0.3s ease'
+                                  },
+                                  border: '1px solid #ddd',
+                                  borderRadius: 1,
+                                  marginBottom: 1,
+                                  padding: '8px 16px',
+                                  backgroundColor: '#fff',
+                              }}
+                    >
                         <Link to={`/workouts/${workout.id}`}
                               style={{textDecoration: 'none', color: 'inherit'}}>{workout.name}</Link>
                     </ListItem>

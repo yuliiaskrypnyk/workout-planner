@@ -19,15 +19,13 @@ function NewWorkout() {
             exercises: selectedExercises
         };
 
-        try {
-            await createWorkout(newWorkout);
-            setWorkoutName("");
-            setSelectedExercises([]);
-        } catch (error) {
-            console.error("Error creating workout:", error);
-        }
-
-        navigate("/workouts")
+        createWorkout(newWorkout)
+            .then(() => {
+                setWorkoutName("")
+                setSelectedExercises([])
+                navigate("/workouts")
+            })
+            .catch(console.error);
     };
 
     return (
