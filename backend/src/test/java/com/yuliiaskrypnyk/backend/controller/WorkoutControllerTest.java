@@ -113,7 +113,7 @@ class WorkoutControllerTest {
 
         mockMvc.perform(get(WORKOUTS_URL + "/{id}", workoutId))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("The page is not available. Please try again later."));
+                .andExpect(jsonPath("$.message").value("Requested Workout was not found."));
     }
 
     // Create workout
@@ -174,7 +174,7 @@ class WorkoutControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(workoutDTO)))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("The page is not available. Please try again later."));
+                .andExpect(jsonPath("$.message").value("Requested Workout was not found."));
     }
 
     // GET all exercises
@@ -213,6 +213,6 @@ class WorkoutControllerTest {
 
         mockMvc.perform(get(EXERCISES_URL + "/{id}", exerciseId))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("The page is not available. Please try again later."));
+                .andExpect(jsonPath("$.message").value("Requested Exercise was not found."));
     }
 }

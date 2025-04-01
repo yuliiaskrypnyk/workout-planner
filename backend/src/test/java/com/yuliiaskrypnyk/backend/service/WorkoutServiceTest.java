@@ -2,6 +2,7 @@ package com.yuliiaskrypnyk.backend.service;
 
 import com.yuliiaskrypnyk.backend.dto.ExerciseDataDTO;
 import com.yuliiaskrypnyk.backend.dto.WorkoutDTO;
+import com.yuliiaskrypnyk.backend.exception.ResourceNotFoundException;
 import com.yuliiaskrypnyk.backend.model.Exercise;
 import com.yuliiaskrypnyk.backend.model.ExerciseData;
 import com.yuliiaskrypnyk.backend.model.Workout;
@@ -15,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -85,15 +85,15 @@ class WorkoutServiceTest {
     }
 
     @Test
-    void findWorkoutById_shouldThrowNoSuchElementException_whenWorkoutDoesNotExist() {
+    void findWorkoutById_shouldThrowResourceNotFoundException_whenWorkoutDoesNotExist() {
         String workoutId = "3";
         when(mockWorkoutRepository.findById(workoutId)).thenReturn(Optional.empty());
 
-        NoSuchElementException exception = assertThrows(NoSuchElementException.class, () ->
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () ->
                 workoutService.findWorkoutById(workoutId)
         );
 
-        assertEquals("Workout with ID " + workoutId + " not found.", exception.getMessage());
+        assertEquals("Requested Workout was not found.", exception.getMessage());
         verify(mockWorkoutRepository, times(1)).findById(workoutId);
     }
 
@@ -146,17 +146,17 @@ class WorkoutServiceTest {
     }
 
     @Test
-    void updateWorkout_shouldThrowNoSuchElementException_whenWorkoutDoesNotExist() {
+    void updateWorkout_shouldThrowResourceNotFoundException_whenWorkoutDoesNotExist() {
         String workoutId = "3";
         WorkoutDTO updatedWorkoutDTO = WorkoutDTO.builder().name("Updated Workout").exercises(Collections.emptyList()).build();
 
         when(mockWorkoutRepository.findById(workoutId)).thenReturn(Optional.empty());
 
-        NoSuchElementException exception = assertThrows(NoSuchElementException.class, () ->
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () ->
                 workoutService.updateWorkout(workoutId, updatedWorkoutDTO)
         );
 
-        assertEquals("Workout with ID " + workoutId + " not found.", exception.getMessage());
+        assertEquals("Requested Workout was not found.", exception.getMessage());
         verify(mockWorkoutRepository, times(1)).findById(workoutId);
     }
 
@@ -199,15 +199,15 @@ class WorkoutServiceTest {
     }
 
     @Test
-    void findExerciseById_shouldThrowNoSuchElementException_whenExerciseDoesNotExist() {
+    void findExerciseById_shouldThrowResourceNotFoundException_whenExerciseDoesNotExist() {
         String exerciseId = "3";
         when(mockExerciseRepository.findById(exerciseId)).thenReturn(Optional.empty());
 
-        NoSuchElementException exception = assertThrows(NoSuchElementException.class, () ->
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () ->
                 workoutService.findExerciseById(exerciseId)
         );
 
-        assertEquals("Exercise with ID " + exerciseId + " not found.", exception.getMessage());
+        assertEquals("Requested Exercise was not found.", exception.getMessage());
         verify(mockExerciseRepository, times(1)).findById(exerciseId);
     }
 }
