@@ -1,21 +1,23 @@
 import {editWorkout, getExercises, getWorkoutById} from "../api/workoutApi.ts";
 import {ChangeEvent, useEffect, useState} from "react";
 import {Workout} from "../types/Workout.ts";
-import {useParams} from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
 import {Box, Button, Card, CardContent, Grid, List, TextField, Typography} from "@mui/material";
 import {Exercise, ExerciseData} from "../types/Exercise.ts";
 import BackButton from "../components/BackButton.tsx";
 import AddExercise from "../components/AddExercise.tsx";
+import DeleteButton from "../components/DeleteButton.tsx";
 
 function WorkoutDetails() {
     const {id} = useParams<{ id: string }>();
+    const location = useLocation();
 
     const [workout, setWorkout] = useState<Workout>();
     const [exercises, setExercises] = useState<Exercise[]>([]);
     const [selectedExercises, setSelectedExercises] = useState<ExerciseData[]>([]);
     const [isExerciseSelectVisible, setIsExerciseSelectVisible] = useState(false);
 
-    const [isEditing, setIsEditing] = useState(false);
+    const [isEditing, setIsEditing] = useState(location.state?.isEditing || false);
     const [editedWorkout, setEditedWorkout] = useState<Workout>();
 
     useEffect(() => {
@@ -46,10 +48,14 @@ function WorkoutDetails() {
     };
 
     const handleSave = () => {
-        if (!editedWorkout || !id) return;
+        if (!editedWorkout || !id || !workout) return;
+
+        const filteredExercises = editedWorkout.exercises.filter(ex =>
+            workout.exercises.some(wEx => wEx.exerciseId === ex.exerciseId)
+        );
 
         const updatedExercises = [
-            ...editedWorkout.exercises,
+            ...filteredExercises,
             ...selectedExercises.map(ex => ({
                 exerciseId: ex.exerciseId,
                 sets: ex.sets || 0,
@@ -70,6 +76,22 @@ function WorkoutDetails() {
             })
             .catch(console.error);
     };
+
+    const handleDeleteExercise = (exerciseId: string) => {
+        if (!workout || !id) return;
+
+        const updatedExercises = workout.exercises.filter(ex => ex.exerciseId !== exerciseId);
+        const updatedWorkout = {...workout, exercises: updatedExercises};
+
+        editWorkout(id, updatedWorkout)
+            .then(updated => {
+                setWorkout(updated);
+                if (!isEditing) {
+                    setEditedWorkout(updated);
+                }
+            })
+            .catch(console.error);
+    }
 
     const handleCancel = () => {
         setEditedWorkout(workout);
@@ -116,9 +138,9 @@ function WorkoutDetails() {
                                         <Typography sx={{marginRight: 1, width: 220}}>{exercise.name}</Typography>
                                     </Grid>
 
-                                    <Grid component="div">
-                                        {isEditing ? (
-                                            <>
+                                    {isEditing ? (
+                                        <Grid container spacing={2} alignItems="center">
+                                            <Grid component="div" sx={{flexGrow: 1}}>
                                                 <TextField
                                                     label="Sets" sx={{marginRight: 1}}
                                                     value={currentExercise?.sets || 0}
@@ -134,21 +156,26 @@ function WorkoutDetails() {
                                                     value={currentExercise?.weight || 0}
                                                     onChange={(e) => handleExerciseChange(workoutExercise.exerciseId, "weight", Number(e.target.value))}
                                                 />
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Typography sx={{display: 'inline', marginRight: 1}}>
-                                                    Sets: {workoutExercise.sets}
-                                                </Typography>
-                                                <Typography sx={{display: 'inline', marginRight: 1}}>
-                                                    Reps: {workoutExercise.reps}
-                                                </Typography>
-                                                <Typography sx={{display: 'inline', marginRight: 1}}>
-                                                    Weight: {workoutExercise.weight}
-                                                </Typography>
-                                            </>
-                                        )}
-                                    </Grid>
+
+                                            </Grid>
+                                            <Grid component="div">
+                                                <DeleteButton handleDelete={handleDeleteExercise}
+                                                              id={workoutExercise.exerciseId} itemType="exercise"/>
+                                            </Grid>
+                                        </Grid>
+                                    ) : (
+                                        <Grid component="div">
+                                            <Typography sx={{display: 'inline', marginRight: 1}}>
+                                                Sets: {workoutExercise.sets}
+                                            </Typography>
+                                            <Typography sx={{display: 'inline', marginRight: 1}}>
+                                                Reps: {workoutExercise.reps}
+                                            </Typography>
+                                            <Typography sx={{display: 'inline', marginRight: 1}}>
+                                                Weight: {workoutExercise.weight}
+                                            </Typography>
+                                        </Grid>
+                                    )}
                                 </Grid>
                             </CardContent>
                         </Card>
@@ -166,12 +193,12 @@ function WorkoutDetails() {
                         />
                     )}
 
-                    <Button variant="contained" color="primary" onClick={handleSave} sx={{margin: 1}}>
-                        Save
-                    </Button>
-
                     <Button variant="contained" color="primary" onClick={handleAddExerciseClick} sx={{margin: 1}}>
                         Add Exercise
+                    </Button>
+
+                    <Button variant="contained" color="primary" onClick={handleSave} sx={{margin: 1}}>
+                        Save
                     </Button>
 
                     <Button variant="outlined" color="secondary" onClick={handleCancel} sx={{margin: 1}}>

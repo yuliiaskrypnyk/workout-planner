@@ -82,4 +82,11 @@ public class WorkoutService {
 
         return workoutRepository.save(updatedWorkout);
     }
+
+    public void deleteWorkout(String id) {
+        Workout workout = workoutRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Workout"));
+
+        workoutRepository.delete(workout);
+    }
 }

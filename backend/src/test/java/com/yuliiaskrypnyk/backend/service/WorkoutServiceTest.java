@@ -160,6 +160,30 @@ class WorkoutServiceTest {
         verify(mockWorkoutRepository, times(1)).findById(workoutId);
     }
 
+    // Delete workout
+    @Test
+    void deleteWorkout_ShouldDelete_WhenWorkoutExists() {
+        String workoutId = "1";
+        Workout workout = workouts.get(0);
+
+        when(mockWorkoutRepository.findById(workoutId)).thenReturn(Optional.of(workout));
+
+        workoutService.deleteWorkout(workoutId);
+
+        verify(mockWorkoutRepository, times(1)).delete(workout);
+    }
+
+    @Test
+    void deleteWorkout_ShouldThrowException_WhenWorkoutNotFound() {
+        String workoutId = "3";
+
+        when(mockWorkoutRepository.findById(workoutId)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> workoutService.deleteWorkout(workoutId));
+
+        verify(mockWorkoutRepository, never()).delete(any());
+    }
+
     // GET all exercises
     @Test
     void findAllExercises_shouldReturnListOfExercises_whenRepositoryHasData() {
