@@ -1,8 +1,8 @@
 import {Dispatch, SetStateAction, useEffect, useState} from "react";
-import {FormControl, InputLabel, MenuItem, Select, Grid, Typography, TextField, IconButton} from "@mui/material";
+import {FormControl, InputLabel, MenuItem, Select, Grid, Typography, TextField} from "@mui/material";
 import {Exercise, ExerciseData} from "../types/Exercise.ts";
 import {getExercises} from "../api/workoutApi.ts";
-import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteButton from "./DeleteButton.tsx";
 
 type AddExerciseProps = {
     selectedExercises: ExerciseData[];
@@ -67,51 +67,50 @@ function AddExercise({selectedExercises, setSelectedExercises, existingExercises
                 </Select>
             </FormControl>
 
-    {selectedExercises.map((exercise) => (
-        <Grid container spacing={2} key={exercise.exerciseId} sx={{alignItems: "center", marginBottom: 1}}>
-            <Grid component="div">
-                <Typography sx={{width: 220}}>
-                    {exercises.find(ex => ex.id === exercise.exerciseId)?.name}
-                </Typography>
-            </Grid>
-            <Grid component="div">
-                <TextField
-                    label="Sets"
-                    value={exercise.sets}
-                    variant="outlined" margin="normal"
-                    onChange={(e) => handleExerciseChange(exercise.exerciseId, 'sets', parseInt(e.target.value) || 0)}
-                    onFocus={() => handleFocus(exercise.exerciseId, 'sets', exercise.sets)}
-                    onBlur={(e) => handleBlur(exercise.exerciseId, 'sets', e.target.value)}
-                />
-            </Grid>
-            <Grid component="div">
-                <TextField
-                    label="Reps"
-                    value={exercise.reps}
-                    variant="outlined" margin="normal"
-                    onChange={(e) => handleExerciseChange(exercise.exerciseId, 'reps', parseInt(e.target.value) || 0)}
-                    onFocus={() => handleFocus(exercise.exerciseId, 'reps', exercise.reps)}
-                    onBlur={(e) => handleBlur(exercise.exerciseId, 'reps', e.target.value)}
-                />
-            </Grid>
-            <Grid component="div">
-                <TextField
-                    label="Weight"
-                    value={exercise.weight}
-                    variant="outlined"
-                    margin="normal"
-                    onChange={(e) => handleExerciseChange(exercise.exerciseId, 'weight', parseInt(e.target.value) || 0)}
-                    onFocus={() => handleFocus(exercise.exerciseId, 'weight', exercise.weight)}
-                    onBlur={(e) => handleBlur(exercise.exerciseId, 'weight', e.target.value)}
-                />
-            </Grid>
-            <Grid component="div">
-                <IconButton onClick={() => handleRemoveExercise(exercise.exerciseId)} color="secondary">
-                    <DeleteIcon/>
-                </IconButton>
-            </Grid>
-        </Grid>
-    ))}
+            {selectedExercises.map((exercise) => (
+                <Grid container spacing={2} key={exercise.exerciseId} sx={{alignItems: "center", marginBottom: 1}}>
+                    <Grid component="div">
+                        <Typography sx={{width: 220}}>
+                            {exercises.find(ex => ex.id === exercise.exerciseId)?.name}
+                        </Typography>
+                    </Grid>
+                    <Grid component="div">
+                        <TextField
+                            label="Sets"
+                            value={exercise.sets}
+                            variant="outlined" margin="normal"
+                            onChange={(e) => handleExerciseChange(exercise.exerciseId, 'sets', parseInt(e.target.value) || 0)}
+                            onFocus={() => handleFocus(exercise.exerciseId, 'sets', exercise.sets)}
+                            onBlur={(e) => handleBlur(exercise.exerciseId, 'sets', e.target.value)}
+                        />
+                    </Grid>
+                    <Grid component="div">
+                        <TextField
+                            label="Reps"
+                            value={exercise.reps}
+                            variant="outlined" margin="normal"
+                            onChange={(e) => handleExerciseChange(exercise.exerciseId, 'reps', parseInt(e.target.value) || 0)}
+                            onFocus={() => handleFocus(exercise.exerciseId, 'reps', exercise.reps)}
+                            onBlur={(e) => handleBlur(exercise.exerciseId, 'reps', e.target.value)}
+                        />
+                    </Grid>
+                    <Grid component="div">
+                        <TextField
+                            label="Weight"
+                            value={exercise.weight}
+                            variant="outlined"
+                            margin="normal"
+                            onChange={(e) => handleExerciseChange(exercise.exerciseId, 'weight', parseInt(e.target.value) || 0)}
+                            onFocus={() => handleFocus(exercise.exerciseId, 'weight', exercise.weight)}
+                            onBlur={(e) => handleBlur(exercise.exerciseId, 'weight', e.target.value)}
+                        />
+                    </Grid>
+                    <Grid component="div">
+                        <DeleteButton handleDelete={handleRemoveExercise} id={exercise.exerciseId}
+                                      isAddingExercise={true}/>
+                    </Grid>
+                </Grid>
+            ))}
         </>
     );
 }

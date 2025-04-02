@@ -6,6 +6,7 @@ import com.yuliiaskrypnyk.backend.model.Workout;
 import com.yuliiaskrypnyk.backend.service.WorkoutService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,6 +49,12 @@ public class WorkoutController {
     public ResponseEntity<Workout> updateWorkout(@PathVariable String id, @RequestBody WorkoutDTO workoutDTO) {
         Workout updatedWorkout = workoutService.updateWorkout(id, workoutDTO);
         return ResponseEntity.ok(updatedWorkout);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteWorkout(@PathVariable String id) {
+        workoutService.deleteWorkout(id);
+        return ResponseEntity.noContent().build();
     }
 
     // Exercise

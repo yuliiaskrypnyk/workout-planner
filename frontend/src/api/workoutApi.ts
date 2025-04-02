@@ -44,6 +44,16 @@ export const editWorkout = async (id: string, editedWorkout: Workout) => {
     }
 };
 
+export const deleteWorkout = async (id: string): Promise<void> => {
+    try {
+        await axios.delete(`${WORKOUTS_URL}/${id}`);
+        console.log("Workout deleted successfully");
+    } catch (error) {
+        console.error("Error deleting workout:", error);
+        throw error;
+    }
+};
+
 export const getExercises = async () => {
     try {
         const response = await axios.get(EXERCISES_URL)

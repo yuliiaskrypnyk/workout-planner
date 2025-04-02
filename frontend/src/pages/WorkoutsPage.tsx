@@ -1,17 +1,32 @@
 import {useEffect, useState} from "react";
 import {Workout} from "../types/Workout.ts";
-import {getWorkouts} from "../api/workoutApi.ts";
-import {Box, Button, Grid, List, ListItem, Typography} from "@mui/material";
-import {Link} from "react-router-dom";
+import {deleteWorkout, getWorkouts} from "../api/workoutApi.ts";
+import {Box, Button, Grid, IconButton, List, ListItem, Typography} from "@mui/material";
+import {Link, useNavigate} from "react-router-dom";
+import DeleteButton from "../components/DeleteButton.tsx";
+import EditIcon from "@mui/icons-material/Edit";
 
 function WorkoutsPage() {
     const [workouts, setWorkouts] = useState<Workout[]>([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         getWorkouts()
             .then(setWorkouts)
             .catch((error) => console.error(error));
     }, []);
+
+    const handleEditClick = (id: string) => {
+        navigate(`/workouts/${id}`, {state: {isEditing: true}});
+    };
+
+    const handleDelete = async (id: string) => {
+        deleteWorkout(id)
+            .then(() => {
+                setWorkouts((prevWorkouts) => prevWorkouts.filter((workout) => workout.id !== id))
+            })
+            .catch(console.error);
+    };
 
     return (
         <Box>
@@ -28,8 +43,8 @@ function WorkoutsPage() {
             </Grid>
 
             <List>
-                {workouts.map(workout => (
-                    <ListItem key={workout.id} component="li"
+                {workouts.map((workout) => (
+                    <ListItem key={workout.id}
                               sx={{
                                   '&:hover': {
                                       backgroundColor: '#e1f5fe',
@@ -41,10 +56,22 @@ function WorkoutsPage() {
                                   marginBottom: 1,
                                   padding: '8px 16px',
                                   backgroundColor: '#fff',
+                                  display: 'flex',
+                                  justifyContent: 'space-between',
+                                  alignItems: 'center',
                               }}
                     >
-                        <Link to={`/workouts/${workout.id}`}
-                              style={{textDecoration: 'none', color: 'inherit'}}>{workout.name}</Link>
+                        <Box component={Link} to={`/workouts/${workout.id}`}
+                             sx={{textDecoration: "none", color: "inherit", flex: 1}}>
+                            {workout.name}
+                        </Box>
+
+                        <Box sx={{display: "flex", gap: 1}}>
+                            <IconButton onClick={() => handleEditClick(workout.id)} color="primary">
+                                <EditIcon/>
+                            </IconButton>
+                            <DeleteButton handleDelete={handleDelete} id={workout.id} itemType="workout"/>
+                        </Box>
                     </ListItem>
                 ))}
             </List>

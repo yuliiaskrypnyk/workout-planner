@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -175,6 +176,14 @@ class WorkoutControllerTest {
                         .content(objectMapper.writeValueAsString(workoutDTO)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Requested Workout was not found."));
+    }
+
+    // Delete workout
+    @Test
+    void deleteWorkout_shouldReturnNoContent_WhenWorkoutExists() throws Exception {
+        String workoutId = "1";
+        mockMvc.perform(delete(WORKOUTS_URL + "/{id}", workoutId))
+                .andExpect(status().isNoContent());
     }
 
     // GET all exercises
