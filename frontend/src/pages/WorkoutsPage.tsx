@@ -20,10 +20,14 @@ function WorkoutsPage() {
         navigate(`/workouts/${id}`, {state: {isEditing: true}});
     };
 
-    const handleDelete = async (id: string) => {
+    const removeWorkoutFromList = (id: string) => {
+        setWorkouts((prevWorkouts) => prevWorkouts.filter((workout) => workout.id !== id));
+    };
+
+    const handleDelete = (id: string) => {
         deleteWorkout(id)
             .then(() => {
-                setWorkouts((prevWorkouts) => prevWorkouts.filter((workout) => workout.id !== id))
+                removeWorkoutFromList(id)
             })
             .catch(console.error);
     };
