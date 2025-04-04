@@ -1,11 +1,9 @@
 package com.yuliiaskrypnyk.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yuliiaskrypnyk.backend.dto.ExerciseDataDTO;
-import com.yuliiaskrypnyk.backend.dto.WorkoutDTO;
-import com.yuliiaskrypnyk.backend.model.Exercise;
-import com.yuliiaskrypnyk.backend.model.Workout;
-import com.yuliiaskrypnyk.backend.repository.ExerciseRepository;
+import com.yuliiaskrypnyk.backend.dto.workout.ExerciseDataDTO;
+import com.yuliiaskrypnyk.backend.dto.workout.WorkoutDTO;
+import com.yuliiaskrypnyk.backend.model.workout.Workout;
 import com.yuliiaskrypnyk.backend.repository.WorkoutRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class WorkoutControllerTest {
 
     private static final String WORKOUTS_URL = "/api/workouts";
-    private static final String EXERCISES_URL = "/api/workouts/exercises";
 
     @Autowired
     private MockMvc mockMvc;
@@ -39,22 +36,16 @@ class WorkoutControllerTest {
     private WorkoutRepository workoutRepository;
 
     @Autowired
-    private ExerciseRepository exerciseRepository;
-
-    @Autowired
     private ObjectMapper objectMapper;
 
     private List<Workout> workouts;
-    private List<Exercise> exercises;
     private List<ExerciseDataDTO> exerciseDataList;
 
     @BeforeEach
     void setUp() {
         workoutRepository.deleteAll();
-        exerciseRepository.deleteAll();
 
         saveMockWorkoutList();
-        saveMockExerciseList();
 
         exerciseDataList = List.of(
                 ExerciseDataDTO.builder().exerciseId("1").sets(3).reps(10).weight(50).build(),
@@ -68,14 +59,6 @@ class WorkoutControllerTest {
                 Workout.builder().id("2").name("Arm workout").build()
         );
         workoutRepository.saveAll(workouts);
-    }
-
-    private void saveMockExerciseList() {
-        exercises = List.of(
-                Exercise.builder().id("1").name("Bench press").description("Description1").image("image1.png").build(),
-                Exercise.builder().id("2").name("Squat").description("Description2").image("image2.png").build()
-        );
-        exerciseRepository.saveAll(exercises);
     }
 
     // GET all workouts
@@ -184,44 +167,5 @@ class WorkoutControllerTest {
         String workoutId = "1";
         mockMvc.perform(delete(WORKOUTS_URL + "/{id}", workoutId))
                 .andExpect(status().isNoContent());
-    }
-
-    // GET all exercises
-    @Test
-    void getAllExercises_shouldReturnListOfExercises_whenExercisesExist() throws Exception {
-        mockMvc.perform(get(EXERCISES_URL))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.size()").value(exercises.size()))
-                .andExpect(jsonPath("$[0].name").value(exercises.get(0).name()))
-                .andExpect(jsonPath("$[1].name").value(exercises.get(1).name()));
-    }
-
-    @Test
-    void getAllExercises_shouldReturnEmptyList_whenNoExercises() throws Exception {
-        exerciseRepository.deleteAll();
-        mockMvc.perform(get(EXERCISES_URL))
-                .andExpect(status().isOk())
-                .andExpect(content().json("[]"));
-    }
-
-    // GET exercise by id
-    @Test
-    void getExerciseById_shouldReturnExercise_whenExerciseExists() throws Exception {
-        String exerciseId = "1";
-
-        mockMvc.perform(get(EXERCISES_URL + "/{id}", exerciseId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(exerciseId))
-                .andExpect(jsonPath("$.name").value(exercises.get(0).name()));
-    }
-
-    @Test
-    void getExerciseById_shouldReturnNotFound_whenExerciseDoesNotExist() throws Exception {
-        String exerciseId = "3";
-
-        mockMvc.perform(get(EXERCISES_URL + "/{id}", exerciseId))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("Requested Exercise was not found."));
     }
 }

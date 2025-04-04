@@ -1,9 +1,9 @@
 package com.yuliiaskrypnyk.backend.controller;
 
-import com.yuliiaskrypnyk.backend.dto.WorkoutDTO;
-import com.yuliiaskrypnyk.backend.model.Exercise;
-import com.yuliiaskrypnyk.backend.model.Workout;
+import com.yuliiaskrypnyk.backend.dto.workout.WorkoutDTO;
+import com.yuliiaskrypnyk.backend.model.workout.Workout;
 import com.yuliiaskrypnyk.backend.service.WorkoutService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,16 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("api/workouts")
 public class WorkoutController {
 
     private final WorkoutService workoutService;
 
-    public WorkoutController(WorkoutService workoutService) {
-        this.workoutService = workoutService;
-    }
-
-    //Workout
     @GetMapping
     public ResponseEntity<List<Workout>> getAllWorkouts() {
         return ResponseEntity.ok(workoutService.findAllWorkouts());
@@ -55,17 +51,5 @@ public class WorkoutController {
     public ResponseEntity<Void> deleteWorkout(@PathVariable String id) {
         workoutService.deleteWorkout(id);
         return ResponseEntity.noContent().build();
-    }
-
-    // Exercise
-    @GetMapping("/exercises")
-    public ResponseEntity<List<Exercise>> getAllExercises() {
-        return ResponseEntity.ok(workoutService.findAllExercises());
-    }
-
-    @GetMapping("/exercises/{id}")
-    public ResponseEntity<Exercise> getExerciseById(@PathVariable String id) {
-        Exercise exercise = workoutService.findExerciseById(id);
-        return ResponseEntity.ok(exercise);
     }
 }

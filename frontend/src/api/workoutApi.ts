@@ -2,7 +2,7 @@ import axios from "axios";
 import {Workout} from "../types/Workout.ts";
 
 const WORKOUTS_URL = "/api/workouts";
-const EXERCISES_URL = "/api/workouts/exercises";
+const EXERCISES_URL = "/api/exercises";
 
 export const getWorkouts = async () => {
     try {

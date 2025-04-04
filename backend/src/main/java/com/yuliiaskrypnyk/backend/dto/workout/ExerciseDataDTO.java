@@ -1,4 +1,4 @@
-package com.yuliiaskrypnyk.backend.dto;
+package com.yuliiaskrypnyk.backend.dto.workout;
 
 import lombok.Builder;
 
