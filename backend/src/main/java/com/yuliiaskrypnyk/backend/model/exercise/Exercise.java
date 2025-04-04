@@ -1,4 +1,4 @@
-package com.yuliiaskrypnyk.backend.model;
+package com.yuliiaskrypnyk.backend.model.exercise;
 
 import lombok.Builder;
 import org.springframework.data.annotation.Id;

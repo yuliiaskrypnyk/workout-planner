@@ -1,42 +1,27 @@
 package com.yuliiaskrypnyk.backend.service;
 
-import com.yuliiaskrypnyk.backend.dto.WorkoutDTO;
+import com.yuliiaskrypnyk.backend.dto.workout.WorkoutDTO;
 import com.yuliiaskrypnyk.backend.exception.ResourceNotFoundException;
-import com.yuliiaskrypnyk.backend.model.Exercise;
-import com.yuliiaskrypnyk.backend.model.ExerciseData;
-import com.yuliiaskrypnyk.backend.model.Workout;
-import com.yuliiaskrypnyk.backend.repository.ExerciseRepository;
+import com.yuliiaskrypnyk.backend.model.workout.ExerciseData;
+import com.yuliiaskrypnyk.backend.model.workout.Workout;
 import com.yuliiaskrypnyk.backend.repository.WorkoutRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class WorkoutService {
     private final WorkoutRepository workoutRepository;
-    private final ExerciseRepository exerciseRepository;
-
-    public WorkoutService(WorkoutRepository workoutRepository, ExerciseRepository exerciseRepository) {
-        this.workoutRepository = workoutRepository;
-        this.exerciseRepository = exerciseRepository;
-    }
 
     public List<Workout> findAllWorkouts() {
         return workoutRepository.findAll();
     }
 
-    public List<Exercise> findAllExercises() {
-        return exerciseRepository.findAll();
-    }
-
     public Workout findWorkoutById(String id) {
         return workoutRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Workout"));
-    }
-
-    public Exercise findExerciseById(String id) {
-        return exerciseRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Exercise"));
     }
 
     public Workout createWorkout(WorkoutDTO workoutDTO) {

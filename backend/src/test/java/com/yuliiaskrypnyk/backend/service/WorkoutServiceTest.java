@@ -1,12 +1,10 @@
 package com.yuliiaskrypnyk.backend.service;
 
-import com.yuliiaskrypnyk.backend.dto.ExerciseDataDTO;
-import com.yuliiaskrypnyk.backend.dto.WorkoutDTO;
+import com.yuliiaskrypnyk.backend.dto.workout.ExerciseDataDTO;
+import com.yuliiaskrypnyk.backend.dto.workout.WorkoutDTO;
 import com.yuliiaskrypnyk.backend.exception.ResourceNotFoundException;
-import com.yuliiaskrypnyk.backend.model.Exercise;
-import com.yuliiaskrypnyk.backend.model.ExerciseData;
-import com.yuliiaskrypnyk.backend.model.Workout;
-import com.yuliiaskrypnyk.backend.repository.ExerciseRepository;
+import com.yuliiaskrypnyk.backend.model.workout.ExerciseData;
+import com.yuliiaskrypnyk.backend.model.workout.Workout;
 import com.yuliiaskrypnyk.backend.repository.WorkoutRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,20 +28,12 @@ class WorkoutServiceTest {
     @Mock
     private WorkoutRepository mockWorkoutRepository;
 
-    @Mock
-    private ExerciseRepository mockExerciseRepository;
-
     @InjectMocks
     private WorkoutService workoutService;
 
     private final List<Workout> workouts = List.of(
             Workout.builder().id("1").name("Leg workout").build(),
             Workout.builder().id("2").name("Arm Workout").build()
-    );
-
-    private final List<Exercise> exercises = List.of(
-            Exercise.builder().id("1").name("Bench press").description("Description1").image("image1.png").build(),
-            Exercise.builder().id("2").name("Squat").description("Description2").image("image2.png").build()
     );
 
     // GET all workouts
@@ -182,56 +172,5 @@ class WorkoutServiceTest {
         assertThrows(ResourceNotFoundException.class, () -> workoutService.deleteWorkout(workoutId));
 
         verify(mockWorkoutRepository, never()).delete(any());
-    }
-
-    // GET all exercises
-    @Test
-    void findAllExercises_shouldReturnListOfExercises_whenRepositoryHasData() {
-        when(mockExerciseRepository.findAll()).thenReturn(exercises);
-
-        List<Exercise> actual = workoutService.findAllExercises();
-
-        assertNotNull(actual, "The list of exercises should not be null");
-        assertEquals(exercises, actual, "The returned list should match the expected list");
-        verify(mockExerciseRepository, times(1)).findAll();
-    }
-
-    @Test
-    void findAllExercises_shouldReturnEmptyList_whenRepositoryIsEmpty() {
-        List<Exercise> emptyExercises = Collections.emptyList();
-        when(mockExerciseRepository.findAll()).thenReturn(emptyExercises);
-
-        List<Exercise> actual = workoutService.findAllExercises();
-
-        assertNotNull(actual, "The list of exercises should not be null");
-        assertTrue(actual.isEmpty(), "The list should be empty");
-        verify(mockExerciseRepository, times(1)).findAll();
-    }
-
-    // GET exercise by id
-    @Test
-    void findExerciseById_shouldReturnExercise_whenExerciseExists() {
-        String exerciseId = "1";
-        Exercise expectedExercise = exercises.get(0);
-        when(mockExerciseRepository.findById(exerciseId)).thenReturn(Optional.of(expectedExercise));
-
-        Exercise actualExercise = workoutService.findExerciseById(exerciseId);
-
-        assertNotNull(actualExercise, "The exercise should not be null");
-        assertEquals(expectedExercise, actualExercise, "The returned exercise should match the expected exercise");
-        verify(mockExerciseRepository, times(1)).findById(exerciseId);
-    }
-
-    @Test
-    void findExerciseById_shouldThrowResourceNotFoundException_whenExerciseDoesNotExist() {
-        String exerciseId = "3";
-        when(mockExerciseRepository.findById(exerciseId)).thenReturn(Optional.empty());
-
-        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () ->
-                workoutService.findExerciseById(exerciseId)
-        );
-
-        assertEquals("Requested Exercise was not found.", exception.getMessage());
-        verify(mockExerciseRepository, times(1)).findById(exerciseId);
     }
 }
