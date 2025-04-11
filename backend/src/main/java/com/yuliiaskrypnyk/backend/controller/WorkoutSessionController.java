@@ -1,7 +1,7 @@
 package com.yuliiaskrypnyk.backend.controller;
 
-import com.yuliiaskrypnyk.backend.dto.workoutSession.WorkoutSessionDTO;
-import com.yuliiaskrypnyk.backend.model.workoutSession.WorkoutSession;
+import com.yuliiaskrypnyk.backend.dto.session.WorkoutSessionDTO;
+import com.yuliiaskrypnyk.backend.model.session.WorkoutSession;
 import com.yuliiaskrypnyk.backend.service.WorkoutSessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

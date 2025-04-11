@@ -1,11 +1,11 @@
 package com.yuliiaskrypnyk.backend.service;
 
-import com.yuliiaskrypnyk.backend.dto.workoutSession.ExerciseSessionDataDTO;
-import com.yuliiaskrypnyk.backend.dto.workoutSession.WorkoutSessionDTO;
+import com.yuliiaskrypnyk.backend.dto.session.ExerciseSessionDataDTO;
+import com.yuliiaskrypnyk.backend.dto.session.WorkoutSessionDTO;
 import com.yuliiaskrypnyk.backend.exception.ResourceNotFoundException;
 import com.yuliiaskrypnyk.backend.model.workout.Workout;
-import com.yuliiaskrypnyk.backend.model.workoutSession.ExerciseSessionData;
-import com.yuliiaskrypnyk.backend.model.workoutSession.WorkoutSession;
+import com.yuliiaskrypnyk.backend.model.session.ExerciseSessionData;
+import com.yuliiaskrypnyk.backend.model.session.WorkoutSession;
 import com.yuliiaskrypnyk.backend.repository.WorkoutRepository;
 import com.yuliiaskrypnyk.backend.repository.WorkoutSessionRepository;
 import org.junit.jupiter.api.Test;

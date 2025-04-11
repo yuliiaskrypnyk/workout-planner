@@ -1,9 +1,9 @@
-package com.yuliiaskrypnyk.backend.model.workoutSession;
+package com.yuliiaskrypnyk.backend.dto.session;
 
 import lombok.Builder;
 
 @Builder
-public record ExerciseSessionData(
+public record ExerciseSessionDataDTO(
         String exerciseId,
         int sets,
         int reps,

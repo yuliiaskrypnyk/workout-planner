@@ -1,4 +1,4 @@
-package com.yuliiaskrypnyk.backend.dto.workoutSession;
+package com.yuliiaskrypnyk.backend.dto.session;
 
 import lombok.Builder;
 
