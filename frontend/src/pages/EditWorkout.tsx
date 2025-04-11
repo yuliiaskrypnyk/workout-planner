@@ -76,7 +76,7 @@ function EditWorkout() {
             <TextField
                 name="name"
                 label="Workout Name"
-                value={workout?.name || ""}
+                value={workout.name}
                 onChange={handleChangeName}
                 fullWidth
                 margin="normal"
