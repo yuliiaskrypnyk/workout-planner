@@ -1,8 +1,10 @@
 import axios from "axios";
 import {Workout} from "../types/Workout.ts";
+import {WorkoutSession} from "../types/WorkoutSession.ts";
 
 const WORKOUTS_URL = "/api/workouts";
 const EXERCISES_URL = "/api/exercises";
+const WORKOUT_SESSION_URL = "/api/sessions";
 
 export const getWorkouts = async () => {
     try {
@@ -50,6 +52,26 @@ export const deleteWorkout = async (id: string): Promise<void> => {
         console.log("Workout deleted successfully");
     } catch (error) {
         console.error("Error deleting workout:", error);
+        throw error;
+    }
+};
+
+export const startWorkoutSession = async (workoutId: string) => {
+    try {
+        const response = await axios.post(`${WORKOUT_SESSION_URL}/start/${workoutId}`)
+        return response.data;
+    } catch (error) {
+        console.error("Error starting workout session:", error);
+        throw error;
+    }
+};
+
+export const completeWorkoutSession = async (session: WorkoutSession) => {
+    try {
+        const response = await axios.put(`${WORKOUT_SESSION_URL}/complete`, session);
+        return response.data;
+    } catch (error) {
+        console.error("Error completing workout session:", error);
         throw error;
     }
 };

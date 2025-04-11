@@ -15,7 +15,7 @@ function BackButton({text}: BackButtonProps) {
 
     return (
         <Button onClick={handleGoBack} variant="contained" sx={{margin: 2}} startIcon={<ArrowBackIcon/>}>
-            Go back to the {text}
+            Go back to {text}
         </Button>
     );
 }
