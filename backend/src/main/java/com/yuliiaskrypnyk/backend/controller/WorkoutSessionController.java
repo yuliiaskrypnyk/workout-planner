@@ -1,5 +1,6 @@
 package com.yuliiaskrypnyk.backend.controller;
 
+import com.yuliiaskrypnyk.backend.dto.workoutSession.WorkoutSessionDTO;
 import com.yuliiaskrypnyk.backend.model.workoutSession.WorkoutSession;
 import com.yuliiaskrypnyk.backend.service.WorkoutSessionService;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,8 @@ public class WorkoutSessionController {
     }
 
     @PutMapping("/complete")
-    public ResponseEntity<WorkoutSession> completeSession(@RequestBody WorkoutSession session) {
-        WorkoutSession savedSession = workoutSessionService.completeWorkoutSession(session);
+    public ResponseEntity<WorkoutSession> completeSession(@RequestBody WorkoutSessionDTO workoutSessionDTO) {
+        WorkoutSession savedSession = workoutSessionService.completeWorkoutSession(workoutSessionDTO);
         return ResponseEntity.ok(savedSession);
     }
 }

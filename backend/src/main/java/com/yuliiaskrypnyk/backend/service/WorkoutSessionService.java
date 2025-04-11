@@ -1,5 +1,6 @@
 package com.yuliiaskrypnyk.backend.service;
 
+import com.yuliiaskrypnyk.backend.dto.workoutSession.WorkoutSessionDTO;
 import com.yuliiaskrypnyk.backend.exception.ResourceNotFoundException;
 import com.yuliiaskrypnyk.backend.model.workout.Workout;
 import com.yuliiaskrypnyk.backend.model.workoutSession.ExerciseSessionData;
@@ -42,12 +43,23 @@ public class WorkoutSessionService {
                 .build();
     }
 
-    public WorkoutSession completeWorkoutSession(WorkoutSession session) {
+    public WorkoutSession completeWorkoutSession(WorkoutSessionDTO workoutSessionDTO) {
+        String sessionId = idService.generateId();
+
+        List<ExerciseSessionData> exerciseSessionDataDTOList = workoutSessionDTO.exercises().stream()
+                .map(workoutExercise -> ExerciseSessionData.builder()
+                        .exerciseId(workoutExercise.exerciseId())
+                        .sets(workoutExercise.sets())
+                        .reps(workoutExercise.reps())
+                        .weight(workoutExercise.weight())
+                        .build())
+                .toList();
+
         WorkoutSession completedSession = WorkoutSession.builder()
-                .id(session.id())
-                .workoutId(session.workoutId())
-                .startTime(session.startTime())
-                .exercises(session.exercises())
+                .id(sessionId)
+                .workoutId(workoutSessionDTO.workoutId())
+                .startTime(workoutSessionDTO.startTime())
+                .exercises(exerciseSessionDataDTOList)
                 .build();
 
         return workoutSessionRepository.save(completedSession);

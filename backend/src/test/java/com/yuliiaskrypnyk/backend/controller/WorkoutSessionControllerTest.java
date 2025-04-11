@@ -1,6 +1,8 @@
 package com.yuliiaskrypnyk.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yuliiaskrypnyk.backend.dto.workoutSession.ExerciseSessionDataDTO;
+import com.yuliiaskrypnyk.backend.dto.workoutSession.WorkoutSessionDTO;
 import com.yuliiaskrypnyk.backend.model.workout.ExerciseData;
 import com.yuliiaskrypnyk.backend.model.workout.Workout;
 import com.yuliiaskrypnyk.backend.model.workoutSession.ExerciseSessionData;
@@ -16,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -81,12 +84,15 @@ class WorkoutSessionControllerTest {
     // PUT complete a workout session
     @Test
     void completeWorkoutSession_shouldReturnCompletedSession_whenRequestIsValid() throws Exception {
-        WorkoutSession workoutSession = WorkoutSession.builder()
-                .id("11")
-                .workoutId("1")
-                .startTime(LocalDateTime.now())
+        String workoutId = "1";
+        String sessionId = "3";
+        LocalDateTime startTime = LocalDateTime.of(2025, 1, 1, 10, 0, 0, 0);
+
+        WorkoutSessionDTO workoutSessionDTO = WorkoutSessionDTO.builder()
+                .workoutId(workoutId)
+                .startTime(startTime)
                 .exercises(List.of(
-                        ExerciseSessionData.builder()
+                        ExerciseSessionDataDTO.builder()
                                 .exerciseId("2")
                                 .sets(50)
                                 .reps(20)
@@ -95,15 +101,29 @@ class WorkoutSessionControllerTest {
                 ))
                 .build();
 
+        WorkoutSession workoutSession = WorkoutSession.builder()
+                .id(sessionId)
+                .workoutId(workoutId)
+                .startTime(startTime)
+                .exercises(workoutSessionDTO.exercises().stream()
+                        .map(exercise -> new ExerciseSessionData(
+                                exercise.exerciseId(),
+                                exercise.sets(),
+                                exercise.reps(),
+                                exercise.weight()
+                        ))
+                        .toList())
+                .build();
+
         workoutSessionRepository.save(workoutSession);
 
         mockMvc.perform(put(SESSIONS_URL + "/complete")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(workoutSession)))
+                        .content(objectMapper.writeValueAsString(workoutSessionDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(workoutSession.id()))
+                .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.workoutId").value(workoutSession.workoutId()))
-                .andExpect(jsonPath("$.startTime").exists())
+                .andExpect(jsonPath("$.startTime").value(startTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))))
                 .andExpect(jsonPath("$.exercises[0].exerciseId").value("2"))
                 .andExpect(jsonPath("$.exercises[0].sets").value(50))
                 .andExpect(jsonPath("$.exercises[0].reps").value(20))

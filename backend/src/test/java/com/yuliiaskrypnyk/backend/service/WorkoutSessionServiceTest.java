@@ -1,7 +1,10 @@
 package com.yuliiaskrypnyk.backend.service;
 
+import com.yuliiaskrypnyk.backend.dto.workoutSession.ExerciseSessionDataDTO;
+import com.yuliiaskrypnyk.backend.dto.workoutSession.WorkoutSessionDTO;
 import com.yuliiaskrypnyk.backend.exception.ResourceNotFoundException;
 import com.yuliiaskrypnyk.backend.model.workout.Workout;
+import com.yuliiaskrypnyk.backend.model.workoutSession.ExerciseSessionData;
 import com.yuliiaskrypnyk.backend.model.workoutSession.WorkoutSession;
 import com.yuliiaskrypnyk.backend.repository.WorkoutRepository;
 import com.yuliiaskrypnyk.backend.repository.WorkoutSessionRepository;
@@ -76,20 +79,48 @@ class WorkoutSessionServiceTest {
     // Complete workout session
     @Test
     void completeWorkoutSession_shouldReturnCompletedSession_whenSessionIsValid() {
+        String workoutId = "1";
         String sessionId = "3";
-        WorkoutSession session = WorkoutSession.builder()
-                .id(sessionId)
-                .workoutId("1")
-                .startTime(LocalDateTime.now())
-                .exercises(Collections.emptyList())
+        LocalDateTime startTime = LocalDateTime.now();
+
+        WorkoutSessionDTO workoutSessionDTO = WorkoutSessionDTO.builder()
+                .workoutId(workoutId)
+                .startTime(startTime)
+                .exercises(List.of(
+                        ExerciseSessionDataDTO.builder()
+                                .exerciseId("2")
+                                .sets(50)
+                                .reps(20)
+                                .weight(200)
+                                .build()
+                ))
                 .build();
 
-        when(mockWorkoutSessionRepository.save(any(WorkoutSession.class))).thenReturn(session);
+        WorkoutSession workoutSession = WorkoutSession.builder()
+                .id(sessionId)
+                .workoutId(workoutId)
+                .startTime(startTime)
+                .exercises(workoutSessionDTO.exercises().stream()
+                        .map(exercise -> new ExerciseSessionData(
+                                exercise.exerciseId(),
+                                exercise.sets(),
+                                exercise.reps(),
+                                exercise.weight()
+                        ))
+                        .toList())
+                .build();
 
-        WorkoutSession completedSession = workoutSessionService.completeWorkoutSession(session);
+        when(mockIdService.generateId()).thenReturn(sessionId);
+
+        when(mockWorkoutSessionRepository.save(any(WorkoutSession.class))).thenReturn(workoutSession);
+
+        WorkoutSession completedSession = workoutSessionService.completeWorkoutSession(workoutSessionDTO);
 
         assertNotNull(completedSession);
         assertEquals(sessionId, completedSession.id());
+        assertEquals(workoutSessionDTO.workoutId(), completedSession.workoutId());
+        assertEquals(workoutSessionDTO.startTime(), completedSession.startTime());
+        assertEquals(workoutSessionDTO.exercises().size(), completedSession.exercises().size());
         verify(mockWorkoutSessionRepository, times(1)).save(any(WorkoutSession.class));
     }
 }
