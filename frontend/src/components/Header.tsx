@@ -1,7 +1,7 @@
-import {AppBar, Box, Button, Drawer, IconButton, List, ListItem, ListItemIcon, Toolbar, Typography} from "@mui/material";
-import MenuIcon from '@mui/icons-material/Menu';
 import {useState} from "react";
 import {Link} from "react-router-dom";
+import {AppBar, Box, Button, Drawer, IconButton, List, ListItem, ListItemIcon, Toolbar, Typography} from "@mui/material";
+import MenuIcon from '@mui/icons-material/Menu';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 
@@ -18,7 +18,7 @@ function Header() {
                 <ListItemIcon>
                     <FitnessCenterIcon/>
                 </ListItemIcon>
-                <Link to="/workouts" style={{textDecoration: 'none', color: 'inherit'}}>Workouts</Link>
+                <Link to="/" style={{textDecoration: 'none', color: 'inherit'}}>Workouts</Link>
             </ListItem>
             <ListItem component="li" onClick={() => toggleDrawer(false)}>
                 <ListItemIcon>

@@ -1,3 +1,5 @@
+export type ExerciseField = "sets" | "reps" | "weight";
+
 export type ExerciseData = {
     exerciseId: string;
     sets: number;

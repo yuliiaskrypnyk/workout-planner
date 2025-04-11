@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
-import {Exercise} from "../types/Exercise.ts";
+import {Exercise} from "../../types/Exercise.ts";
 import {Link} from "react-router-dom";
-import {getExercises} from "../api/workoutApi.ts";
+import {getExercises} from "../../api/workoutApi.ts";
 import {Box, Button, Grid, Typography} from "@mui/material";
 
 function ExercisesPage() {
@@ -23,7 +23,7 @@ function ExercisesPage() {
                         <img src={`/images/exercises/${exercise.image}`} alt={exercise.name}
                              style={{width: 270, height: 150}}/>
                         <Typography sx={{marginTop: 1}}>{exercise.name}</Typography>
-                        <Link to={`/exercises/${exercise.id}`}>
+                        <Link to={`/exercise/${exercise.id}`}>
                             <Button variant="contained" color="primary">Read Description</Button>
                         </Link>
                     </Grid>

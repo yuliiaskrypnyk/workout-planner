@@ -1,9 +1,10 @@
 import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
-import {Exercise} from "../types/Exercise.ts";
-import {getExerciseById} from "../api/workoutApi.ts";
+import {Exercise} from "../../types/Exercise.ts";
+import {getExerciseById} from "../../api/workoutApi.ts";
 import {Box, Grid, Typography} from "@mui/material";
-import BackButton from "../components/BackButton.tsx";
+import BackButton from "../../components/BackButton.tsx";
+import LoadingIndicator from "../../components/LoadingIndicator.tsx";
 
 const ExerciseDetails = () => {
     const {id} = useParams<{ id: string }>();
@@ -18,7 +19,9 @@ const ExerciseDetails = () => {
         }
     }, [id]);
 
-    if (!exercise) return <p>Loading...</p>;
+    if (!exercise) {
+        return <LoadingIndicator />;
+    }
 
     return (
         <Box>

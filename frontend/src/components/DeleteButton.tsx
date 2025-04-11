@@ -5,7 +5,7 @@ import {useState} from "react";
 type DeleteItemType = 'workout' | 'exercise';
 
 interface DeleteButtonProps {
-    handleDelete: (id: string) => void;
+    handleDelete: (exerciseId: string) => void;
     id: string;
     itemType?: DeleteItemType;
     isAddingExercise?: boolean;
