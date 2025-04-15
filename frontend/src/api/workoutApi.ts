@@ -66,12 +66,22 @@ export const startWorkoutSession = async (workoutId: string) => {
     }
 };
 
-export const completeWorkoutSession = async (session: WorkoutSession) => {
+export const completeWorkoutSession = async (sessionId: string, session: WorkoutSession) => {
     try {
-        const response = await axios.put(`${WORKOUT_SESSION_URL}/complete`, session);
+        const response = await axios.put(`${WORKOUT_SESSION_URL}/complete/${sessionId}`, session);
         return response.data;
     } catch (error) {
         console.error("Error completing workout session:", error);
+        throw error;
+    }
+};
+
+export const getWorkoutHistory = async (): Promise<WorkoutSession[]> => {
+    try {
+        const response = await axios.get(`${WORKOUT_SESSION_URL}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching workout session:", error);
         throw error;
     }
 };

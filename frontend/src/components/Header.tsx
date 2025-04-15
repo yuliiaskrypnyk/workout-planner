@@ -4,6 +4,7 @@ import {AppBar, Box, Button, Drawer, IconButton, List, ListItem, ListItemIcon, T
 import MenuIcon from '@mui/icons-material/Menu';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import ListAltIcon from '@mui/icons-material/ListAlt';
+import HistoryIcon from '@mui/icons-material/History';
 
 function Header() {
     const [open, setOpen] = useState<boolean>(false);
@@ -25,6 +26,12 @@ function Header() {
                     <ListAltIcon/>
                 </ListItemIcon>
                 <Link to="/exercises" style={{textDecoration: 'none', color: 'inherit'}}>Exercises</Link>
+            </ListItem>
+            <ListItem component="li" onClick={() => toggleDrawer(false)}>
+                <ListItemIcon>
+                    <HistoryIcon/>
+                </ListItemIcon>
+                <Link to="/history" style={{textDecoration: 'none', color: 'inherit'}}>Workouts History</Link>
             </ListItem>
         </List>
     );

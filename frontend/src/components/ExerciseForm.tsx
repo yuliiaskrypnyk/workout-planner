@@ -47,14 +47,14 @@ function ExerciseForm({
             const exercise = exercises.find(ex => ex.id === workoutExercise.exerciseId);
             if (!exercise) return null;
             return (
-                <Card key={workoutExercise.exerciseId} sx={{marginBottom: 2, padding: 2}}>
+                <Card key={workoutExercise.exerciseId} sx={{marginBottom: 1}}>
                     <CardContent>
                         <Grid container spacing={2} alignItems="center">
                             <Grid component="div">
                                 <img
                                     src={`/images/exercises/${exercise.image}`}
                                     alt={exercise.name}
-                                    style={{width: 150, height: 100}}
+                                    style={{width: 125, height: 75}}
                                 />
                             </Grid>
                             <Grid component="div">

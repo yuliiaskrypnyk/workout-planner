@@ -59,7 +59,7 @@ function StartWorkoutPage() {
     const completeWorkout = (completedExercisesList: ExerciseSessionData[]) => {
         const completedSession = {...session, exercises: completedExercisesList};
 
-        completeWorkoutSession(completedSession)
+        completeWorkoutSession(session.id, completedSession)
             .then(() => {
                 navigate('/');
             })
@@ -84,7 +84,7 @@ function StartWorkoutPage() {
     return (
         <Box>
             <BackButton text="Workout Details"/>
-            <Typography variant="h5" sx={{margin: 2}}>Start Workout</Typography>
+            <Typography variant="h5" sx={{margin: 2}}>Start {session.workoutName}</Typography>
 
             <ExerciseForm
                 workoutExercises={session.exercises}

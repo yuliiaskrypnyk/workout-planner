@@ -39,23 +39,20 @@ function WorkoutDetails() {
                     const exercise = exercises.find(ex => ex.id === workoutExercise.exerciseId);
                     if (!exercise) return null;
                     return (
-                        <Card key={workoutExercise.exerciseId} sx={{marginBottom: 2, padding: 2}}>
+                        <Card key={workoutExercise.exerciseId} sx={{marginBottom: 1}}>
                             <CardContent>
                                 <Grid container spacing={2} alignItems="center">
                                     <Grid component="div">
                                         <img
                                             src={`/images/exercises/${exercise.image}`}
                                             alt={exercise.name}
-                                            style={{width: 150, height: 100}}
+                                            style={{width: 125, height: 75}}
                                         />
                                     </Grid>
                                     <Grid component="div">
                                         <Link to={`/exercise/${exercise.id}`} target="_blank" style={{ textDecoration: 'none' }}>
                                             <Typography sx={{marginRight: 1, width: 220, color: 'primary.main'}}>{exercise.name}</Typography>
                                         </Link>
-                                    </Grid>
-
-                                    <Grid component="div">
                                         <Typography sx={{display: 'inline', marginRight: 1}}>
                                             Sets: {workoutExercise.sets}
                                         </Typography>
@@ -63,7 +60,7 @@ function WorkoutDetails() {
                                             Reps: {workoutExercise.reps}
                                         </Typography>
                                         <Typography sx={{display: 'inline', marginRight: 1}}>
-                                            Weight: {workoutExercise.weight}
+                                            Weight: {workoutExercise.weight} kg
                                         </Typography>
                                     </Grid>
                                 </Grid>

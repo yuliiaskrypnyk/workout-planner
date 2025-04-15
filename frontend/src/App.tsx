@@ -9,6 +9,7 @@ import WorkoutDetails from "./pages/WorkoutDetails.tsx";
 import EditWorkout from "./pages/EditWorkout.tsx";
 import StartWorkoutPage from "./pages/StartWorkoutPage.tsx";
 import WorkoutsPage from "./pages/WorkoutsPage.tsx";
+import WorkoutHistoryPage from "./pages/WorkoutHistoryPage.tsx";
 
 function App() {
     return (
@@ -21,6 +22,7 @@ function App() {
                     <Route path="/workout/:id/edit" element={<EditWorkout/>}/>
                     <Route path="/workout/:id" element={<WorkoutDetails/>}/>
                     <Route path="/workout/:id/start" element={<StartWorkoutPage/>}/>
+                    <Route path="/history" element={<WorkoutHistoryPage/>}/>
                     <Route path="/exercises" element={<ExercisesPage/>}/>
                     <Route path="/exercise/:id" element={<ExerciseDetails/>}/>
                 </Routes>
