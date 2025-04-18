@@ -1,13 +1,13 @@
 import {ChangeEvent, useEffect, useState} from "react";
 import {Link, useNavigate, useParams} from "react-router-dom";
-import {Box, Button, TextField, Typography} from "@mui/material";
-import {editWorkout, getWorkoutById} from "../api/workoutApi.ts";
-import {Workout} from "../types/Workout.ts";
-import {ExerciseData, ExerciseField} from "../types/Exercise.ts";
-import BackButton from "../components/BackButton.tsx";
-import ExerciseForm from "../components/ExerciseForm.tsx";
-import LoadingIndicator from "../components/LoadingIndicator.tsx";
-import AddExerciseButton from "../components/AddExerciseButton.tsx";
+import {Box, TextField, Typography} from "@mui/material";
+import {editWorkout, getWorkoutById} from "../../api/workoutApi.ts";
+import {ExerciseData, ExerciseField, Workout} from "../../types/Workout.ts";
+import BackButton from "../../components/buttons/BackButton.tsx";
+import ExerciseForm from "../../components/ExerciseForm.tsx";
+import LoadingIndicator from "../../components/LoadingIndicator.tsx";
+import AddExerciseButton from "../../components/AddExerciseButton.tsx";
+import StyledButton from "../../components/buttons/StyledButton.tsx";
 
 function EditWorkout() {
     const {id} = useParams<{ id: string }>();
@@ -70,7 +70,7 @@ function EditWorkout() {
 
     return (
         <Box sx={{alignItems: "center"}}>
-            <BackButton text="Workout list"/>
+            <BackButton/>
             <Typography variant="h5" sx={{margin: 2}}>Workout Details</Typography>
 
             <TextField
@@ -94,14 +94,10 @@ function EditWorkout() {
                 existingExercises={workout.exercises}
             />
 
-            <Button variant="contained" color="primary" onClick={handleSave} sx={{margin: 1}}>
-                Save
-            </Button>
+            <StyledButton onClick={handleSave}>Save Workout</StyledButton>
 
             <Link to={`/`}>
-                <Button variant="outlined" color="secondary" sx={{margin: 1}}>
-                    Close
-                </Button>
+                <StyledButton variant={"outlined"}>Close</StyledButton>
             </Link>
         </Box>
     );

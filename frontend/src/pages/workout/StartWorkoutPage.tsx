@@ -1,13 +1,14 @@
 import {useEffect, useState} from "react";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import {Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography} from "@mui/material";
-import {completeWorkoutSession, startWorkoutSession} from "../api/workoutApi.ts";
-import {ExerciseField} from "../types/Exercise.ts";
-import BackButton from "../components/BackButton.tsx";
-import ExerciseForm from "../components/ExerciseForm.tsx";
-import {ExerciseSessionData, WorkoutSession} from "../types/WorkoutSession.ts";
-import LoadingIndicator from "../components/LoadingIndicator.tsx";
-import AddExerciseButton from "../components/AddExerciseButton.tsx";
+import {completeWorkoutSession, startWorkoutSession} from "../../api/workoutApi.ts";
+import BackButton from "../../components/buttons/BackButton.tsx";
+import ExerciseForm from "../../components/ExerciseForm.tsx";
+import {ExerciseSessionData, WorkoutSession} from "../../types/WorkoutSession.ts";
+import LoadingIndicator from "../../components/LoadingIndicator.tsx";
+import AddExerciseButton from "../../components/AddExerciseButton.tsx";
+import StyledButton from "../../components/buttons/StyledButton.tsx";
+import {ExerciseField} from "../../types/Workout.ts";
 
 function StartWorkoutPage() {
     const {id} = useParams<{ id: string }>();
@@ -59,7 +60,7 @@ function StartWorkoutPage() {
     const completeWorkout = (completedExercisesList: ExerciseSessionData[]) => {
         const completedSession = {...session, exercises: completedExercisesList};
 
-        completeWorkoutSession(completedSession)
+        completeWorkoutSession(session.id, completedSession)
             .then(() => {
                 navigate('/');
             })
@@ -83,8 +84,8 @@ function StartWorkoutPage() {
 
     return (
         <Box>
-            <BackButton text="Workout Details"/>
-            <Typography variant="h5" sx={{margin: 2}}>Start Workout</Typography>
+            <BackButton text="Workout Details" to={`/workout/${id}`}/>
+            <Typography variant="h5" sx={{margin: 2}}>Start {session.workoutName}</Typography>
 
             <ExerciseForm
                 workoutExercises={session.exercises}
@@ -102,9 +103,8 @@ function StartWorkoutPage() {
                 completedExercises={completedExercises}
             />
 
-            <Button variant="contained" onClick={handleCompleteWorkout} sx={{margin: 1}}>
-                Complete Workout
-            </Button>
+            <StyledButton onClick={handleCompleteWorkout}>Complete Workout</StyledButton>
+
 
             <Dialog open={open} onClose={handleCancel}>
                 <DialogTitle>Complete Workout</DialogTitle>
@@ -122,9 +122,7 @@ function StartWorkoutPage() {
             </Dialog>
 
             <Link to={`/workout/${id}`}>
-                <Button variant="outlined" color="secondary" sx={{margin: 1}}>
-                    Cancel
-                </Button>
+                <StyledButton variant={"outlined"}>Cancel</StyledButton>
             </Link>
         </Box>
     );

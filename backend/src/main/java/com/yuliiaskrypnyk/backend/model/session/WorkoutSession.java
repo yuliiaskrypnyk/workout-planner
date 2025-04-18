@@ -11,7 +11,7 @@ import java.util.List;
 @Document(collection = "workout_sessions")
 public record WorkoutSession(
         @Id String id,
-        String workoutId,
+        String workoutName,
         LocalDateTime startTime,
         List<ExerciseSessionData> exercises
 ) {

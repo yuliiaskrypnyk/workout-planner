@@ -7,7 +7,8 @@ import java.util.List;
 
 @Builder
 public record WorkoutSessionDTO(
-        String workoutId,
+        String id,
+        String workoutName,
         LocalDateTime startTime,
         List<ExerciseSessionDataDTO> exercises
 ) {

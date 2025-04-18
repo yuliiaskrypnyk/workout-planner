@@ -1,23 +1,17 @@
-import {useEffect, useState} from "react";
-import {Exercise, ExerciseData, ExerciseField} from "../types/Exercise.ts";
-import {createWorkout, getExercises} from "../api/workoutApi.ts";
-import {Box, Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography} from "@mui/material";
+import {useState} from "react";
+import {createWorkout} from "../../api/workoutApi.ts";
+import {Box, TextField, Typography} from "@mui/material";
 import {useNavigate} from "react-router-dom";
-import BackButton from "../components/BackButton.tsx";
-import ExerciseForm from "../components/ExerciseForm.tsx";
+import BackButton from "../../components/buttons/BackButton.tsx";
+import ExerciseForm from "../../components/ExerciseForm.tsx";
+import {ExerciseData, ExerciseField} from "../../types/Workout.ts";
+import StyledButton from "../../components/buttons/StyledButton.tsx";
+import ExerciseSelect from "../../components/ExerciseSelect.tsx";
 
 function NewWorkout() {
     const [workoutName, setWorkoutName] = useState('');
     const [selectedExercises, setSelectedExercises] = useState<ExerciseData[]>([]);
-    const [exercises, setExercises] = useState<Exercise[]>([]);
-
     const navigate = useNavigate();
-
-    useEffect(() => {
-        getExercises()
-            .then(setExercises)
-            .catch((error) => console.error(error));
-    }, []);
 
     const handleSave = async () => {
         const newWorkout = {
@@ -51,13 +45,9 @@ function NewWorkout() {
         setSelectedExercises(prev => prev.filter(ex => ex.exerciseId !== exerciseId));
     };
 
-    const availableExercises = exercises.filter(exercise =>
-        !selectedExercises.some(selEx => selEx.exerciseId === exercise.id)
-    );
-
     return (
         <Box sx={{alignItems: "center"}}>
-            <BackButton text="Workout list"/>
+            <BackButton/>
             <Typography variant="h5" sx={{margin: 2}}>Create a new Workout</Typography>
 
             <TextField
@@ -69,16 +59,7 @@ function NewWorkout() {
                 variant="outlined"
             />
 
-            <FormControl fullWidth margin="normal">
-                <InputLabel>Select an exercise</InputLabel>
-                <Select label="Select an exercise" value="" onChange={(e) => handleAddExercise(e.target.value)}>
-                    {availableExercises.map(exercise => (
-                        <MenuItem key={exercise.id} value={exercise.id} sx={{width: 250}}>
-                            {exercise.name}
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
+            <ExerciseSelect selectedExercises={selectedExercises} handleAddExercise={handleAddExercise}/>
 
             <ExerciseForm
                 workoutExercises={selectedExercises}
@@ -87,10 +68,9 @@ function NewWorkout() {
                 isAddingExercise={true}
             />
 
-            <Button variant="contained" color="primary" onClick={handleSave}
-                    disabled={!workoutName || selectedExercises.length === 0}>
+            <StyledButton onClick={handleSave} disabled={!workoutName || selectedExercises.length === 0}>
                 Save Workout
-            </Button>
+            </StyledButton>
         </Box>
     );
 }

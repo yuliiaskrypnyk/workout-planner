@@ -3,7 +3,6 @@ import {Workout} from "../types/Workout.ts";
 import {WorkoutSession} from "../types/WorkoutSession.ts";
 
 const WORKOUTS_URL = "/api/workouts";
-const EXERCISES_URL = "/api/exercises";
 const WORKOUT_SESSION_URL = "/api/sessions";
 
 export const getWorkouts = async () => {
@@ -66,9 +65,9 @@ export const startWorkoutSession = async (workoutId: string) => {
     }
 };
 
-export const completeWorkoutSession = async (session: WorkoutSession) => {
+export const completeWorkoutSession = async (sessionId: string, session: WorkoutSession) => {
     try {
-        const response = await axios.put(`${WORKOUT_SESSION_URL}/complete`, session);
+        const response = await axios.put(`${WORKOUT_SESSION_URL}/complete/${sessionId}`, session);
         return response.data;
     } catch (error) {
         console.error("Error completing workout session:", error);
@@ -76,22 +75,12 @@ export const completeWorkoutSession = async (session: WorkoutSession) => {
     }
 };
 
-export const getExercises = async () => {
+export const getWorkoutHistory = async (): Promise<WorkoutSession[]> => {
     try {
-        const response = await axios.get(EXERCISES_URL)
+        const response = await axios.get(`${WORKOUT_SESSION_URL}`);
         return response.data;
     } catch (error) {
-        console.error("Error fetching exercises:", error);
-        throw error;
-    }
-};
-
-export const getExerciseById = async (id: string) => {
-    try {
-        const response = await axios.get(`${EXERCISES_URL}/${id}`);
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching exercise:", error);
+        console.error("Error fetching workout session:", error);
         throw error;
     }
 };

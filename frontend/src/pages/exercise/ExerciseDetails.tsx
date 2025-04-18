@@ -1,14 +1,13 @@
 import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import {Exercise} from "../../types/Exercise.ts";
-import {getExerciseById} from "../../api/workoutApi.ts";
+import {getExerciseById} from "../../api/exerciseApi.ts";
 import {Box, Grid, Typography} from "@mui/material";
-import BackButton from "../../components/BackButton.tsx";
+import BackButton from "../../components/buttons/BackButton.tsx";
 import LoadingIndicator from "../../components/LoadingIndicator.tsx";
 
 const ExerciseDetails = () => {
     const {id} = useParams<{ id: string }>();
-
     const [exercise, setExercise] = useState<Exercise>();
 
     useEffect(() => {
@@ -25,8 +24,7 @@ const ExerciseDetails = () => {
 
     return (
         <Box>
-            <BackButton text="Exercise list"/>
-
+            <BackButton text="All Exercises" to="/exercises"/>
             <Box sx={{display: 'flex', flexDirection: 'column'}}>
                 <Typography variant="h5" sx={{margin: 2}}>{exercise.name}</Typography>
                 <Grid container spacing={2} justifyContent="center">
