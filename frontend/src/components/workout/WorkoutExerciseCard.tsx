@@ -6,7 +6,7 @@ interface Props {
     exercise: ExerciseData;
 }
 
-function WorkoutExerciseCard({exercise}: Props) {
+function WorkoutExerciseCard({exercise}: Readonly<Props>) {
     return (
         <Card key={exercise.exerciseId} sx={{marginBottom: 1}}>
             <CardContent>

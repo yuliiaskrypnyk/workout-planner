@@ -9,7 +9,7 @@ interface Props {
     handleCheckboxChange?: (exerciseId: string, checked: boolean) => void;
     completedExercises?: string[];
     isAddingExercise?: boolean;
-};
+}
 
 function ExerciseForm({
                           workoutExercises,
@@ -18,7 +18,7 @@ function ExerciseForm({
                           handleCheckboxChange,
                           completedExercises,
                           isAddingExercise,
-                      }: Props) {
+                      }: Readonly<Props>) {
 
     const handleExerciseFocus = (exerciseId: string, field: ExerciseField, value: number | string) => {
         if (value === 0) {

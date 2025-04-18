@@ -11,7 +11,7 @@ interface Props {
     onDelete: (id: string) => void;
 }
 
-function WorkoutCard({workout, onDelete}: Props) {
+function WorkoutCard({workout, onDelete}: Readonly<Props>) {
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);

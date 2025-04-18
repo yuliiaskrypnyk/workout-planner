@@ -26,7 +26,7 @@ function ExerciseFormCard ({
                               isAddingExercise,
                               handleExerciseFocus,
                               handleExerciseBlur
-                          }: Props) {
+                          }: Readonly<Props>) {
     const [exerciseInfo, setExerciseInfo] = useState<Partial<Exercise>>({})
 
     useEffect(() => {

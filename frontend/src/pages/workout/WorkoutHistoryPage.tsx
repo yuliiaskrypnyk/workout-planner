@@ -44,8 +44,8 @@ function WorkoutHistoryPage() {
 
                         <AccordionDetails>
                             <List>
-                                {session.exercises.map((exercise, idx) => (
-                                    <ListItem key={idx} alignItems="flex-start">
+                                {session.exercises.map((exercise) => (
+                                    <ListItem key={exercise.exerciseId} alignItems="flex-start">
                                         <img
                                             src={`/images/exercises/${exercise.exerciseImage}`}
                                             alt={exercise.exerciseName}
