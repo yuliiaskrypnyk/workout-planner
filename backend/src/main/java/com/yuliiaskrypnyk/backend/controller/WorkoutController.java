@@ -30,9 +30,9 @@ public class WorkoutController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Workout> getWorkoutById(@PathVariable String id) {
-        Workout workout = workoutService.findWorkoutById(id);
-        return ResponseEntity.ok(workout);
+    public ResponseEntity<WorkoutDTO> getWorkoutById(@PathVariable String id) {
+        WorkoutDTO workoutDTO = workoutService.findWorkoutWithExercisesById(id);
+        return ResponseEntity.ok(workoutDTO);
     }
 
     @PostMapping

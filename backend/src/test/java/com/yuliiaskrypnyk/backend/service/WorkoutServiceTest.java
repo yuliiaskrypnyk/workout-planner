@@ -3,8 +3,10 @@ package com.yuliiaskrypnyk.backend.service;
 import com.yuliiaskrypnyk.backend.dto.workout.ExerciseDataDTO;
 import com.yuliiaskrypnyk.backend.dto.workout.WorkoutDTO;
 import com.yuliiaskrypnyk.backend.exception.ResourceNotFoundException;
+import com.yuliiaskrypnyk.backend.model.exercise.Exercise;
 import com.yuliiaskrypnyk.backend.model.workout.ExerciseData;
 import com.yuliiaskrypnyk.backend.model.workout.Workout;
+import com.yuliiaskrypnyk.backend.repository.ExerciseRepository;
 import com.yuliiaskrypnyk.backend.repository.WorkoutRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,11 +30,16 @@ class WorkoutServiceTest {
     @Mock
     private WorkoutRepository mockWorkoutRepository;
 
+    @Mock
+    private ExerciseRepository mockExerciseRepository;
+
     @InjectMocks
     private WorkoutService workoutService;
 
     private final List<Workout> workouts = List.of(
-            Workout.builder().id("1").name("Leg workout").build(),
+            Workout.builder().id("1").name("Leg workout").exercises(List.of(
+                    ExerciseData.builder().exerciseId("12").sets(3).reps(10).weight(20).build()
+            )).build(),
             Workout.builder().id("2").name("Arm Workout").build()
     );
 
@@ -62,25 +69,47 @@ class WorkoutServiceTest {
 
     // GET workout by id
     @Test
-    void findWorkoutById_shouldReturnWorkout_whenWorkoutExists() {
+    void findWorkoutWithExercisesById_shouldReturnWorkout_whenWorkoutExists() {
         String workoutId = "1";
         Workout expectedWorkout = workouts.get(0);
+        String exerciseId = "12";
+        String exerciseName = "Squat";
+        String exerciseImage = "squat.jpeg";
+
+        Exercise exercise = Exercise.builder()
+                .id(exerciseId)
+                .name(exerciseName)
+                .image(exerciseImage)
+                .build();
+
         when(mockWorkoutRepository.findById(workoutId)).thenReturn(Optional.of(expectedWorkout));
+        when(mockExerciseRepository.findById(exerciseId)).thenReturn(Optional.of(exercise));
 
-        Workout actualWorkout = workoutService.findWorkoutById(workoutId);
+        WorkoutDTO actualWorkoutDTO = workoutService.findWorkoutWithExercisesById(workoutId);
 
-        assertNotNull(actualWorkout, "The workout should not be null");
-        assertEquals(expectedWorkout, actualWorkout, "The returned workout should match the expected workout");
+        assertNotNull(actualWorkoutDTO);
+        assertEquals(expectedWorkout.name(), actualWorkoutDTO.name());
+        assertEquals(1, actualWorkoutDTO.exercises().size());
+
+        ExerciseDataDTO firstExercise = actualWorkoutDTO.exercises().get(0);
+        assertEquals(exerciseId, firstExercise.exerciseId());
+        assertEquals(exerciseName, firstExercise.exerciseName());
+        assertEquals(exerciseImage, firstExercise.exerciseImage());
+        assertEquals(3, firstExercise.sets());
+        assertEquals(10, firstExercise.reps());
+        assertEquals(20, firstExercise.weight());
+
         verify(mockWorkoutRepository, times(1)).findById(workoutId);
+        verify(mockExerciseRepository, times(1)).findById(exerciseId);
     }
 
     @Test
-    void findWorkoutById_shouldThrowResourceNotFoundException_whenWorkoutDoesNotExist() {
+    void findWorkoutWithExercisesById_shouldThrowResourceNotFoundException_whenWorkoutDoesNotExist() {
         String workoutId = "3";
         when(mockWorkoutRepository.findById(workoutId)).thenReturn(Optional.empty());
 
         ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () ->
-                workoutService.findWorkoutById(workoutId)
+                workoutService.findWorkoutWithExercisesById(workoutId)
         );
 
         assertEquals("Requested Workout was not found.", exception.getMessage());

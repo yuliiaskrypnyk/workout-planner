@@ -3,7 +3,10 @@ package com.yuliiaskrypnyk.backend.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yuliiaskrypnyk.backend.dto.workout.ExerciseDataDTO;
 import com.yuliiaskrypnyk.backend.dto.workout.WorkoutDTO;
+import com.yuliiaskrypnyk.backend.model.exercise.Exercise;
+import com.yuliiaskrypnyk.backend.model.workout.ExerciseData;
 import com.yuliiaskrypnyk.backend.model.workout.Workout;
+import com.yuliiaskrypnyk.backend.repository.ExerciseRepository;
 import com.yuliiaskrypnyk.backend.repository.WorkoutRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +39,9 @@ class WorkoutControllerTest {
     private WorkoutRepository workoutRepository;
 
     @Autowired
+    private ExerciseRepository exerciseRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     private List<Workout> workouts;
@@ -45,6 +51,7 @@ class WorkoutControllerTest {
     void setUp() {
         workoutRepository.deleteAll();
 
+        saveMockExercise();
         saveMockWorkoutList();
 
         exerciseDataList = List.of(
@@ -55,10 +62,17 @@ class WorkoutControllerTest {
 
     private void saveMockWorkoutList() {
         workouts = List.of(
-                Workout.builder().id("1").name("Leg workout").build(),
+                Workout.builder().id("1").name("Leg workout").exercises(List.of(
+                        ExerciseData.builder().exerciseId("3").sets(3).reps(10).weight(50).build()
+                )).build(),
                 Workout.builder().id("2").name("Arm workout").build()
         );
         workoutRepository.saveAll(workouts);
+    }
+
+    public void saveMockExercise() {
+        Exercise exercise = Exercise.builder().id("3").name("Squat").image("squat.jpeg").build();
+        exerciseRepository.save(exercise);
     }
 
     // GET all workouts
@@ -82,13 +96,19 @@ class WorkoutControllerTest {
 
     // GET workout by id
     @Test
-    void getWorkoutById_shouldReturnWorkout_whenWorkoutExists() throws Exception {
+    void getWorkoutById_shouldReturnWorkoutDTO_whenWorkoutExists() throws Exception {
         String workoutId = "1";
 
         mockMvc.perform(get(WORKOUTS_URL + "/{id}", workoutId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(workoutId))
-                .andExpect(jsonPath("$.name").value(workouts.get(0).name()));
+                .andExpect(jsonPath("$.name").value("Leg workout"))
+                .andExpect(jsonPath("$.exercises.length()").value(1))
+                .andExpect(jsonPath("$.exercises[0].exerciseId").value("3"))
+                .andExpect(jsonPath("$.exercises[0].exerciseName").value("Squat"))
+                .andExpect(jsonPath("$.exercises[0].exerciseImage").value("squat.jpeg"))
+                .andExpect(jsonPath("$.exercises[0].sets").value(3))
+                .andExpect(jsonPath("$.exercises[0].reps").value(10))
+                .andExpect(jsonPath("$.exercises[0].weight").value(50));
     }
 
     @Test

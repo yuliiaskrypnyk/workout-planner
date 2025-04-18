@@ -1,9 +1,9 @@
 import {Accordion, AccordionSummary, AccordionDetails, Typography, List, ListItem, ListItemText, Box} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import {WorkoutSession} from "../types/WorkoutSession.ts";
+import {WorkoutSession} from "../../types/WorkoutSession.ts";
 import {useEffect, useState} from "react";
-import {getWorkoutHistory} from "../api/workoutApi.ts";
-import LoadingIndicator from "../components/LoadingIndicator.tsx";
+import {getWorkoutHistory} from "../../api/workoutApi.ts";
+import LoadingIndicator from "../../components/LoadingIndicator.tsx";
 
 function WorkoutHistoryPage() {
     const [history, setHistory] = useState<WorkoutSession[]>([]);

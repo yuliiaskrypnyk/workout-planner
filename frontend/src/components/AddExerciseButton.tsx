@@ -1,9 +1,9 @@
-import {Dispatch, SetStateAction, useEffect, useState} from "react";
-import {FormControl, InputLabel, MenuItem, Select, Button} from "@mui/material";
-import {Exercise, ExerciseData, ExerciseField} from "../types/Exercise.ts";
-import {getExercises} from "../api/workoutApi.ts";
+import {Dispatch, SetStateAction, useState} from "react";
 import ExerciseForm from "./ExerciseForm.tsx";
 import {ExerciseSessionData} from "../types/WorkoutSession.ts";
+import {ExerciseData, ExerciseField} from "../types/Workout.ts";
+import StyledButton from "./buttons/StyledButton.tsx";
+import ExerciseSelect from "./ExerciseSelect.tsx";
 
 type AddExerciseButtonProps = {
     selectedExercises: (ExerciseData | ExerciseSessionData)[];
@@ -22,29 +22,22 @@ function AddExerciseButton({
                                completedExercises,
                                isAddingExercise
                            }: Readonly<AddExerciseButtonProps>) {
-    const [exercises, setExercises] = useState<Exercise[]>([]);
     const [isExerciseSelectVisible, setIsExerciseSelectVisible] = useState(false);
 
     const handleAddExerciseClick = () => {
-        if(!isAddingExercise) {
+        if (!isAddingExercise) {
             setIsExerciseSelectVisible((prev) => !prev);
-        } else{
+        } else {
             setIsExerciseSelectVisible(true);
         }
     };
 
-    useEffect(() => {
-        getExercises()
-            .then(setExercises)
-            .catch((error) => console.error(error));
-    }, []);
-
     const handleAddExercise = (exerciseId: string) => {
         if (!selectedExercises.some(ex => ex.exerciseId === exerciseId)) {
             setSelectedExercises(prev => [...prev, {exerciseId, sets: 0, reps: 0, weight: 0}]);
-            if(!isAddingExercise) {
+            if (!isAddingExercise) {
                 setIsExerciseSelectVisible(false);
-            } else{
+            } else {
                 setIsExerciseSelectVisible(true);
             }
         }
@@ -60,11 +53,6 @@ function AddExerciseButton({
         setSelectedExercises(prev => prev.filter(ex => ex.exerciseId !== exerciseId));
     };
 
-    const availableExercises = exercises.filter(exercise =>
-        !selectedExercises.some(selEx => selEx.exerciseId === exercise.id) &&
-        !existingExercises.some(existing => existing.exerciseId === exercise.id)
-    );
-
     return (
         <>
             <ExerciseForm
@@ -76,26 +64,13 @@ function AddExerciseButton({
             />
 
             {isExerciseSelectVisible && (
-                <FormControl fullWidth margin="normal">
-                    <InputLabel>Select an exercise</InputLabel>
-                    <Select label="Select an exercise" value="" onChange={(e) => handleAddExercise(e.target.value)}>
-                        {availableExercises.map(exercise => (
-                            <MenuItem key={exercise.id} value={exercise.id} sx={{width: 250}}>
-                                {exercise.name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+                <ExerciseSelect
+                    selectedExercises={selectedExercises}
+                    existingExercises={existingExercises}
+                    handleAddExercise={handleAddExercise}/>
             )}
 
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={handleAddExerciseClick}
-                sx={{margin: 1}}
-            >
-                Add Exercise
-            </Button>
+            <StyledButton onClick={handleAddExerciseClick}>Add Exercise</StyledButton>
         </>
     );
 }
