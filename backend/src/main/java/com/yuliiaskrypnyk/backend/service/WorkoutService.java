@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +19,16 @@ public class WorkoutService {
     private final WorkoutRepository workoutRepository;
     private final ExerciseRepository exerciseRepository;
 
-    public List<Workout> findAllWorkouts() {
-        return workoutRepository.findAll();
+    public List<WorkoutDTO> findAllWorkouts() {
+        List<Workout> workouts = workoutRepository.findAll();
+
+        return workouts.stream()
+                .map(workout -> WorkoutDTO.builder()
+                        .id(workout.id())
+                        .name(workout.name())
+                        .exerciseCount(workout.exercises().size())
+                        .build())
+                .toList();
     }
 
     public WorkoutDTO findWorkoutWithExercisesById(String id) {
@@ -42,7 +49,7 @@ public class WorkoutService {
                             .weight(workoutExercise.weight())
                             .build();
                 })
-                .collect(Collectors.toList());
+                .toList();
 
         return WorkoutDTO.builder()
                 .name(workout.name())

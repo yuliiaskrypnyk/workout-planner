@@ -40,7 +40,7 @@ class WorkoutServiceTest {
             Workout.builder().id("1").name("Leg workout").exercises(List.of(
                     ExerciseData.builder().exerciseId("12").sets(3).reps(10).weight(20).build()
             )).build(),
-            Workout.builder().id("2").name("Arm Workout").build()
+            Workout.builder().id("2").name("Arm Workout").exercises(List.of()).build()
     );
 
     // GET all workouts
@@ -48,10 +48,20 @@ class WorkoutServiceTest {
     void findAllWorkouts_shouldReturnListOfWorkouts_whenRepositoryHasData() {
         when(mockWorkoutRepository.findAll()).thenReturn(workouts);
 
-        List<Workout> actual = workoutService.findAllWorkouts();
+        List<WorkoutDTO> actual = workoutService.findAllWorkouts();
 
-        assertNotNull(actual, "The list of workouts should not be null");
-        assertEquals(workouts, actual, "The returned list should match the expected list");
+        assertNotNull(actual);
+        assertEquals(2, actual.size());
+
+        WorkoutDTO dto1 = actual.get(0);
+        assertEquals("1", dto1.id());
+        assertEquals("Leg workout", dto1.name());
+        assertEquals(1, dto1.exerciseCount());
+
+        WorkoutDTO dto2 = actual.get(1);
+        assertEquals("2", dto2.id());
+        assertEquals("Arm Workout", dto2.name());
+        assertEquals(0, dto2.exerciseCount());
         verify(mockWorkoutRepository, times(1)).findAll();
     }
 
@@ -60,10 +70,10 @@ class WorkoutServiceTest {
         List<Workout> emptyWorkouts = Collections.emptyList();
         when(mockWorkoutRepository.findAll()).thenReturn(emptyWorkouts);
 
-        List<Workout> actual = workoutService.findAllWorkouts();
+        List<WorkoutDTO> actual = workoutService.findAllWorkouts();
 
-        assertNotNull(actual, "The list of workouts should not be null");
-        assertTrue(actual.isEmpty(), "The list should be empty");
+        assertNotNull(actual);
+        assertTrue(actual.isEmpty());
         verify(mockWorkoutRepository, times(1)).findAll();
     }
 
@@ -139,9 +149,9 @@ class WorkoutServiceTest {
 
         Workout actualWorkout = workoutService.createWorkout(workoutDTO);
 
-        assertNotNull(actualWorkout, "The created workout should not be null");
-        assertEquals(expectedWorkout.name(), actualWorkout.name(), "Workout name should match");
-        assertEquals(expectedWorkout.exercises(), actualWorkout.exercises(), "Workout exercises should match");
+        assertNotNull(actualWorkout);
+        assertEquals(expectedWorkout.name(), actualWorkout.name());
+        assertEquals(expectedWorkout.exercises(), actualWorkout.exercises());
         verify(mockWorkoutRepository, times(1)).save(any(Workout.class));
     }
 

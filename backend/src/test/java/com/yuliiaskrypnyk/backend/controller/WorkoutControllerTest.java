@@ -65,7 +65,7 @@ class WorkoutControllerTest {
                 Workout.builder().id("1").name("Leg workout").exercises(List.of(
                         ExerciseData.builder().exerciseId("3").sets(3).reps(10).weight(50).build()
                 )).build(),
-                Workout.builder().id("2").name("Arm workout").build()
+                Workout.builder().id("2").name("Arm workout").exercises(List.of()).build()
         );
         workoutRepository.saveAll(workouts);
     }
@@ -83,7 +83,9 @@ class WorkoutControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.size()").value(workouts.size()))
                 .andExpect(jsonPath("$[0].name").value(workouts.get(0).name()))
-                .andExpect(jsonPath("$[1].name").value(workouts.get(1).name()));
+                .andExpect(jsonPath("$[0].exerciseCount").value(1))
+                .andExpect(jsonPath("$[1].name").value(workouts.get(1).name()))
+                .andExpect(jsonPath("$[1].exerciseCount").value(0));
     }
 
     @Test

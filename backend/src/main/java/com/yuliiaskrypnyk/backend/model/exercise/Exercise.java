@@ -10,5 +10,7 @@ public record Exercise(
         @Id String id,
         String name,
         String description,
-        String image) {
+        String image,
+        ExerciseType type
+) {
 }

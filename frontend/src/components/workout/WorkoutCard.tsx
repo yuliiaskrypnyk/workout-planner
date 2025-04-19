@@ -2,12 +2,12 @@ import {Box, Card, IconButton, Menu, MenuItem, Typography} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteButton from "../buttons/DeleteButton.tsx";
-import {Workout} from "../../types/Workout.ts";
+import {WorkoutDTO} from "../../types/Workout.ts";
 import {useState} from "react";
 import EditIcon from "@mui/icons-material/Edit";
 
 interface Props {
-    workout: Workout;
+    workout: WorkoutDTO;
     onDelete: (id: string) => void;
 }
 
@@ -78,8 +78,9 @@ function WorkoutCard({workout, onDelete}: Readonly<Props>) {
                 </Menu>
             </Box>
 
-            <Typography sx={{fontSize: '1.2rem', paddingX: 2}}>
-                {workout.name}
+            <Typography sx={{fontSize: '1.2rem', paddingX: 2}}>{workout.name}</Typography>
+            <Typography sx={{paddingX: 2}}>
+                {workout.exerciseCount} {workout.exerciseCount === 1 ? "exercise" : "exercises"}
             </Typography>
         </Card>
     );
