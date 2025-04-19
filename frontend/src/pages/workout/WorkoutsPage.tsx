@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Workout} from "../../types/Workout.ts";
+import {WorkoutDTO} from "../../types/Workout.ts";
 import {deleteWorkout, getWorkouts} from "../../api/workoutApi.ts";
 import {Box, Typography} from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
@@ -9,7 +9,7 @@ import WorkoutCard from "../../components/workout/WorkoutCard.tsx";
 import StyledButton from "../../components/buttons/StyledButton.tsx";
 
 function WorkoutsPage() {
-    const [workouts, setWorkouts] = useState<Workout[]>([]);
+    const [workouts, setWorkouts] = useState<WorkoutDTO[]>([]);
 
     useEffect(() => {
         getWorkouts()
@@ -33,7 +33,7 @@ function WorkoutsPage() {
 
     return (
         <Box sx={{margin: 2}}>
-            <Typography variant="h5" sx={{marginLeft: 3}}>All Workouts</Typography>
+            <Typography variant="h5" sx={{marginLeft: 3}}>Workouts</Typography>
             <Box sx={{margin: 2}}>
                 <Link to={"/workout/new"}>
                     <StyledButton startIcon={<AddIcon />}>New Workout</StyledButton>

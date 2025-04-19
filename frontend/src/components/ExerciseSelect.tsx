@@ -28,9 +28,13 @@ const ExerciseSelect = ({selectedExercises, existingExercises, handleAddExercise
     return (
         <FormControl fullWidth margin="normal">
             <InputLabel>Select an exercise</InputLabel>
-            <Select label="Select an exercise" value="" onChange={(e) => handleAddExercise(e.target.value)}>
+            <Select label="Select an exercise" value="" onChange={(e) => handleAddExercise(e.target.value)}
+                    MenuProps={{PaperProps: {style: {maxHeight: 300}}}}>
+                <em></em>
                 {availableExercises.map(exercise => (
-                    <MenuItem key={exercise.id} value={exercise.id} sx={{width: 250}}>
+                    <MenuItem key={exercise.id} value={exercise.id}>
+                        <img src={`/images/exercises/${exercise.image}`} alt={exercise.name}
+                             style={{width: 80, height: 50, marginRight: 10}}/>
                         {exercise.name}
                     </MenuItem>
                 ))}

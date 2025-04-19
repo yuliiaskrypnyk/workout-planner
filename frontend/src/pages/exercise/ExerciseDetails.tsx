@@ -19,7 +19,7 @@ const ExerciseDetails = () => {
     }, [id]);
 
     if (!exercise) {
-        return <LoadingIndicator />;
+        return <LoadingIndicator/>;
     }
 
     return (
@@ -29,9 +29,11 @@ const ExerciseDetails = () => {
                 <Typography variant="h5" sx={{margin: 2}}>{exercise.name}</Typography>
                 <Grid container spacing={2} justifyContent="center">
                     <Grid component="div" key={exercise.id}
-                          sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center'}}>
+                          sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                         <img src={`/images/exercises/${exercise.image}`} alt={exercise.name}/>
-                        <Typography>{exercise.description}</Typography>
+                        <Typography sx={{textAlign: 'left', whiteSpace: "pre-line", m: 2}}>
+                            {exercise.description}
+                        </Typography>
                     </Grid>
                 </Grid>
             </Box>

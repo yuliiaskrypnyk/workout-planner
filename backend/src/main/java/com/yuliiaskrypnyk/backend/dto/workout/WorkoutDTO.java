@@ -6,6 +6,9 @@ import java.util.List;
 
 @Builder
 public record WorkoutDTO(
+        String id,
         String name,
-        List<ExerciseDataDTO> exercises) {
+        List<ExerciseDataDTO> exercises,
+        int exerciseCount
+) {
 }
