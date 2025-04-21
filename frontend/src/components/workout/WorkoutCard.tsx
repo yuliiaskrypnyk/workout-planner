@@ -34,14 +34,14 @@ function WorkoutCard({workout, onDelete}: Readonly<Props>) {
     const workoutItemStyle = {
         width: 250,
         height: 120,
-        borderRadius: 4,
-        boxShadow: 3,
+        borderRadius: 6,
+        boxShadow: '0 8px 15px rgba(0, 0, 0, 0.2)',
         position: 'relative',
         padding: 2,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        background: 'linear-gradient(135deg, #1e3a8a, #1d4ed8)',
+        background: 'linear-gradient(135deg, #1e3a8a, #2563eb)',
         color: 'white',
         '&:hover': {
             background: 'linear-gradient(135deg, #1d4ed8, #2563eb)',

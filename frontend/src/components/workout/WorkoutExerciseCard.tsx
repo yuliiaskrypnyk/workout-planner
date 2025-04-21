@@ -8,21 +8,21 @@ interface Props {
 
 function WorkoutExerciseCard({exercise}: Readonly<Props>) {
     return (
-        <Card key={exercise.exerciseId} sx={{marginBottom: 1}}>
+        <Card key={exercise.exerciseId} sx={{marginBottom: 2, borderRadius: 3, boxShadow: 3}}>
             <CardContent>
                 <Grid container spacing={2} alignItems="center">
                     <Grid component="div">
                         <img
                             src={`/images/exercises/${exercise.exerciseImage}`}
                             alt={exercise.exerciseName}
-                            style={{width: 125, height: 75}}
+                            style={{width: 120, height: 70}}
                         />
                     </Grid>
                     <Grid component="div">
                         <Link to={`/exercise/${exercise.exerciseId}`} target="_blank" style={{textDecoration: 'none'}}>
                             <Typography sx={{
                                 marginRight: 1,
-                                width: 220,
+                                marginBottom: 0.5,
                                 color: 'primary.main'
                             }}>{exercise.exerciseName}</Typography>
                         </Link>

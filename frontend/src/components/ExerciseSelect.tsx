@@ -26,7 +26,11 @@ const ExerciseSelect = ({selectedExercises, existingExercises, handleAddExercise
     );
 
     return (
-        <FormControl fullWidth margin="normal">
+        <FormControl
+            fullWidth
+            margin="normal"
+            sx={{'& .MuiOutlinedInput-root': {borderRadius: 3}}}
+        >
             <InputLabel>Select an exercise</InputLabel>
             <Select label="Select an exercise" value="" onChange={(e) => handleAddExercise(e.target.value)}
                     MenuProps={{PaperProps: {style: {maxHeight: 300}}}}>

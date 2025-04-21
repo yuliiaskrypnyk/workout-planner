@@ -50,7 +50,7 @@ function EditWorkout() {
             .then(updated => {
                 setWorkout(updated);
                 setSelectedExercises([]);
-                navigate('/');
+                navigate('/workouts');
             })
             .catch(console.error);
     };
@@ -71,7 +71,7 @@ function EditWorkout() {
     return (
         <Box sx={{alignItems: "center"}}>
             <BackButton/>
-            <Typography variant="h5" sx={{margin: 2}}>Workout Details</Typography>
+            <Typography variant="h5" sx={{margin: 2}}>Edit Workout</Typography>
 
             <TextField
                 name="name"
@@ -80,6 +80,7 @@ function EditWorkout() {
                 onChange={handleChangeName}
                 fullWidth
                 margin="normal"
+                sx={{'& .MuiOutlinedInput-root': {borderRadius: 3}}}
             />
 
             <ExerciseForm

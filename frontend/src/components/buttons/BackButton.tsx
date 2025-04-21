@@ -7,7 +7,7 @@ type BackButtonProps = Readonly<{
     to?: string;
 }>;
 
-function BackButton({text = "All Workouts", to = "/"}: BackButtonProps) {
+function BackButton({text = "All Workouts", to = "/workouts"}: BackButtonProps) {
     const navigate = useNavigate();
 
     const handleGoBack = () => {
