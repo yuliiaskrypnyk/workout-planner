@@ -62,7 +62,7 @@ function StartWorkoutPage() {
 
         completeWorkoutSession(session.id, completedSession)
             .then(() => {
-                navigate('/');
+                navigate('/workouts');
             })
             .catch(console.error);
     };
@@ -104,7 +104,6 @@ function StartWorkoutPage() {
             />
 
             <StyledButton onClick={handleCompleteWorkout}>Complete Workout</StyledButton>
-
 
             <Dialog open={open} onClose={handleCancel}>
                 <DialogTitle>Complete Workout</DialogTitle>

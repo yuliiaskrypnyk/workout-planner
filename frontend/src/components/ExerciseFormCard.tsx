@@ -44,7 +44,7 @@ function ExerciseFormCard ({
     const exerciseName = workoutExercise.exerciseName || exerciseInfo.name;
 
     return (
-        <Card sx={{marginBottom: 1}}>
+        <Card sx={{marginBottom: 2, borderRadius: 3, boxShadow: 3}}>
             <CardContent>
                 <Grid container spacing={2} alignItems="center">
                     <Grid component="div">
@@ -66,6 +66,7 @@ function ExerciseFormCard ({
                             }
                             onFocus={() => handleExerciseFocus(workoutExercise.exerciseId, 'sets', workoutExercise.sets)}
                             onBlur={(e) => handleExerciseBlur(workoutExercise.exerciseId, 'sets', e.target.value)}
+                            sx={{'& .MuiOutlinedInput-root': {borderRadius: 2}}}
                         />
                     </Grid>
                     <Grid component="div">
@@ -77,6 +78,7 @@ function ExerciseFormCard ({
                             }
                             onFocus={() => handleExerciseFocus(workoutExercise.exerciseId, 'reps', workoutExercise.reps)}
                             onBlur={(e) => handleExerciseBlur(workoutExercise.exerciseId, 'reps', e.target.value)}
+                            sx={{'& .MuiOutlinedInput-root': {borderRadius: 2}}}
                         />
                     </Grid>
                     <Grid component="div">
@@ -88,6 +90,7 @@ function ExerciseFormCard ({
                             }
                             onFocus={() => handleExerciseFocus(workoutExercise.exerciseId, 'weight', workoutExercise.weight)}
                             onBlur={(e) => handleExerciseBlur(workoutExercise.exerciseId, 'weight', e.target.value)}
+                            sx={{'& .MuiOutlinedInput-root': {borderRadius: 2}}}
                         />
                     </Grid>
                     {handleCheckboxChange && (

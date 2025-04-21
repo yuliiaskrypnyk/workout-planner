@@ -10,6 +10,7 @@ const StyledButton = ({variant = "contained", ...props}: ButtonProps) => (
             borderRadius: 3,
             textTransform: 'none',
             marginRight: 1,
+            marginTop: 0.5,
             '&:hover': {
                 background: variant === "contained" ? "#2196f3" : "rgba(66, 165, 245, 0.1)",
             },

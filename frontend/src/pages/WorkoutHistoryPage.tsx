@@ -1,9 +1,9 @@
 import {Accordion, AccordionSummary, AccordionDetails, Typography, List, ListItem, ListItemText, Box} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import {WorkoutSession} from "../../types/WorkoutSession.ts";
+import {WorkoutSession} from "../types/WorkoutSession.ts";
 import {useEffect, useState} from "react";
-import {getWorkoutHistory} from "../../api/workoutApi.ts";
-import LoadingIndicator from "../../components/LoadingIndicator.tsx";
+import {getWorkoutHistory} from "../api/workoutApi.ts";
+import LoadingIndicator from "../components/LoadingIndicator.tsx";
 
 function WorkoutHistoryPage() {
     const [history, setHistory] = useState<WorkoutSession[]>([]);
@@ -23,8 +23,14 @@ function WorkoutHistoryPage() {
             <Typography variant="h5" sx={{margin: 2}}>Workout History</Typography>
 
             {history.map(session => (
-                <div key={session.id}>
-                    <Box sx={{backgroundColor: "#f0f0f0", px: 2, py: 1}}>
+                <Box key={session.id} sx={{ mb: 3, borderRadius: 3, overflow: "hidden", boxShadow: 1 }}>
+                    <Box sx={{
+                        backgroundColor: "#e3f2fd",
+                        px: 2,
+                        py: 1.5,
+                        borderTopLeftRadius: 12,
+                        borderTopRightRadius: 12
+                    }}>
                         <Typography variant="subtitle2" sx={{fontWeight: "bold"}}>
                             {new Date(session.startTime).toLocaleDateString("en-US", {
                                 weekday: "short",
@@ -35,7 +41,7 @@ function WorkoutHistoryPage() {
                         </Typography>
                     </Box>
 
-                    <Accordion sx={{boxShadow: "none", borderTop: "1px solid #e0e0e0"}}>
+                    <Accordion sx={{boxShadow: "none"}}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                             <Typography variant="body1">
                                 {session.workoutName}
@@ -45,11 +51,11 @@ function WorkoutHistoryPage() {
                         <AccordionDetails>
                             <List>
                                 {session.exercises.map((exercise) => (
-                                    <ListItem key={exercise.exerciseId} alignItems="flex-start">
+                                    <ListItem key={exercise.exerciseId} alignItems="flex-start"  sx={{ px: 0 }}>
                                         <img
                                             src={`/images/exercises/${exercise.exerciseImage}`}
                                             alt={exercise.exerciseName}
-                                            style={{width: 90, height: 55, marginRight: 16}}
+                                            style={{width: 90, height: 50, marginRight: 16}}
                                         />
                                         <ListItemText
                                             primary={exercise.exerciseName}
@@ -60,7 +66,7 @@ function WorkoutHistoryPage() {
                             </List>
                         </AccordionDetails>
                     </Accordion>
-                </div>
+                </Box>
             ))}
         </div>
     );

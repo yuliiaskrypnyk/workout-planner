@@ -28,8 +28,19 @@ function ExercisesPage() {
         <Button
             onClick={() => handleFilterClick(type)}
             sx={{
-                textDecoration: selectedType === type ? "underline" : "none",
-                fontWeight: selectedType === type ? "bold" : "normal",
+                color: selectedType === type ? "white" : "primary.main",
+                backgroundColor: selectedType === type ? "#42a5f5" : "transparent",
+                border: "1px solid",
+                borderColor: selectedType === type ? "primary.main" : "#42a5f5",
+                borderRadius: "12px",
+                marginRight: 1,
+                paddingX: 2,
+                paddingY: 0.5,
+                textTransform: "none",
+                '&:hover': {
+                    borderColor: "primary.main",
+                    background: selectedType === type ? "#2196f3" : "rgba(66, 165, 245, 0.1)",
+                },
             }}
         >
             {label}
@@ -39,7 +50,7 @@ function ExercisesPage() {
     return (
         <Box sx={{alignItems: "center"}}>
             <Typography variant="h5" sx={{margin: 2}}>Exercises</Typography>
-            <Box sx={{ marginBottom: 2 }}>
+            <Box sx={{marginBottom: 2}}>
                 {renderButton(null, "All")}
                 {renderButton(ExerciseType.UPPER_BODY, "Upper Body")}
                 {renderButton(ExerciseType.LOWER_BODY, "Lower Body")}
@@ -48,7 +59,13 @@ function ExercisesPage() {
             <Grid container spacing={2} justifyContent="flex-start">
                 {filteredExercises.map(exercise => (
                     <Grid component="div" key={exercise.id}
-                          sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', width: 200}}>
+                          sx={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center',
+                              textAlign: 'center',
+                              width: 200
+                          }}>
                         <Link to={`/exercise/${exercise.id}`}>
                             <img src={`/images/exercises/${exercise.image}`} alt={exercise.name}
                                  style={{width: 155, height: 90, marginRight: 10}}/>

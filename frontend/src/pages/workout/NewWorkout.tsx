@@ -24,7 +24,7 @@ function NewWorkout() {
             .then(() => {
                 setWorkoutName("")
                 setSelectedExercises([])
-                navigate("/")
+                navigate("/workouts")
             })
             .catch(console.error);
     };
@@ -57,6 +57,7 @@ function NewWorkout() {
                 fullWidth
                 margin="normal"
                 variant="outlined"
+                sx={{'& .MuiOutlinedInput-root': {borderRadius: 3}}}
             />
 
             <ExerciseSelect selectedExercises={selectedExercises} handleAddExercise={handleAddExercise}/>
