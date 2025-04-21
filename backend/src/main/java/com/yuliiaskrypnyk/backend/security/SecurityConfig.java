@@ -17,6 +17,8 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private static final String EXERCISE_API_PATH = "/api/exercises/**";
+
     @Value("${app.url}")
     private String appUrl;
 
@@ -27,9 +29,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(a -> a
                         .requestMatchers("/api/auth/me").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/api/exercises/**").hasAuthority(AppUserRole.ADMIN.toString())
-                        .requestMatchers(HttpMethod.PUT, "/api/exercises/**").hasAuthority(AppUserRole.ADMIN.toString())
-                        .requestMatchers(HttpMethod.POST, "/api/exercises/**").hasRole(AppUserRole.ADMIN.toString())
+                        .requestMatchers(HttpMethod.DELETE, EXERCISE_API_PATH).hasAuthority(AppUserRole.ADMIN.toString())
+                        .requestMatchers(HttpMethod.PUT, EXERCISE_API_PATH).hasAuthority(AppUserRole.ADMIN.toString())
+                        .requestMatchers(HttpMethod.POST, EXERCISE_API_PATH).hasRole(AppUserRole.ADMIN.toString())
                         .requestMatchers("/api/users/**").hasAuthority(AppUserRole.ADMIN.toString())
                         .anyRequest().permitAll()
                 )

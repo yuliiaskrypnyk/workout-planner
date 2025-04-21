@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useState} from "react";
+import {createContext, useContext, useEffect, useMemo, useState} from "react";
 import {AppUser} from "../types/AppUser.ts";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
@@ -43,8 +43,14 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
         getUser();
     }, []);
 
+    const contextValue = useMemo(() => ({
+        user,
+        getUser,
+        loading
+    }), [user, getUser, loading]);
+
     return (
-        <AuthContext.Provider value={{user, getUser, loading}}>
+        <AuthContext.Provider value={contextValue}>
             {children}
         </AuthContext.Provider>
     );
